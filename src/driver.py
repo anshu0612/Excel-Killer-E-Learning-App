@@ -1,5 +1,5 @@
 from flask import Flask, render_template_string
-from src.cleaning_act.lambda_function import lambda_handler
+from cleaning_act.lambda_function import lambda_handler
 
 app = Flask(__name__)
 
