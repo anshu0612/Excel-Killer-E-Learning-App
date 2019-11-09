@@ -25,6 +25,21 @@ Resources:
           Properties:
             Path: basics/
             Method: ANY
+  understandingActivity:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      # set codeUri to nothing if lambda_function.py is in root directory
+      # if for instance, lambda_function.py in function folder, set codeUri to function/
+      CodeUri: src/understanding_act
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.6
+      MemorySize: 1024
+      Events:
+        understandingPandas:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: understanding/
+            Method: ANY
   cleaningActivity:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
