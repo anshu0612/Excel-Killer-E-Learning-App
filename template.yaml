@@ -45,7 +45,7 @@ Resources:
     Properties:
       # set codeUri to nothing if lambda_function.py is in root directory
       # if for instance, lambda_function.py in function folder, set codeUri to function/
-      CodeUri: src/cleaning_act
+      CodeUri: src/visualize_act
       Handler: lambda_function.lambda_handler
       Runtime: python3.6
       MemorySize: 1024
