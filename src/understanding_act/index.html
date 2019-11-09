@@ -105,7 +105,7 @@
                         </md-card-header-text>
                             <md-card-media v-if="answer.isComplete === null || answer.isComplete === false">
                              {{answer.jsonFeedback.errors}}
-                                <md-button class="md-raised" target="_blank" v-bind:href="'https://stackoverflow.com/search?q=' + answer.jsonFeedback.errors">Search StackOverlow</md-button>
+                                <md-button class="md-raised" target="_blank" v-bind:href="'https://stackoverflow.com/search?q='">Search StackOverlow</md-button>
                             </md-card-media>
                             <md-card-media>
                                 <md-button class="md-raised md-primary" v-on:click="postContents">Submit</md-button>
