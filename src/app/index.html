@@ -1,129 +1,162 @@
 <!DOCTYPE html>
 <html>
 <title>Excel Killer</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
-<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:description" content="Get rid of the hassle of using Excel because there is a better way to thrive using Pandas" />
+<meta property="og:image" content="https://pbs.twimg.com/media/BX9nCP6CAAAqxR6?format=png&name=small" />
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css" />
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans' />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
 <head>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147552064-1"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
     gtag('js', new Date());
 
     gtag('config', 'UA-147552064-1');
   </script>
+
+  <script>
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
 </head>
 <style>
-html, body, h1, h2, h3, h4, h5 {font-family: "Open Sans", sans-serif}
+  html,
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: "Open Sans", sans-serif
+  }
 
-.w3-theme-d2 {
-  background-color: #506987 !important;
-}
+  .w3-theme-d2 {
+    background-color: #506987 !important;
+  }
 
-.w3-theme-d4 {
-  background-color: #26466D !important;
-}
+  .w3-theme-d4 {
+    background-color: #26466D !important;
+  }
 
-.like {
-  float: right;
-}
+  .like {
+    float: right;
+  }
 
-.learn {
-  background-color: #FCD116 !important;
-  color: #000 !important;
-}
+  .share-btn {
+    width: 25px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+  .share-content {
+
+  }
+
+  .learn {
+    background-color: #ffbf00 !important;
+    color: #000 !important;
+  }
 </style>
+
 <body class="w3-theme-l5">
 
-<!-- Navbar -->
-<div class="w3-top">
- <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
-  <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-  <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4">Excel Killer</a>
-  <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white" title="My Account">
-    <img src="/w3images/avatar2.png" class="w3-circle" style="height:23px;width:23px" alt="Share">
-  </a>
- </div>
-</div>
-<!-- Page Container -->
-<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
-  <!-- The Grid -->
-  <div class="w3-row">
-    <!-- Left Column -->
-    <div class="w3-col m3">
-      <!-- Accordion -->
-      <div class="w3-card w3-round">
-      </div>
-      <br>
-
-      <!-- Alert Box -->
-      <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
-        <span onclick="this.parentElement.style.display='none'" class="w3-button w3-theme-l3 w3-display-topright">
-          <i class="fa fa-remove"></i>
-        </span>
-        <p><strong>Hey!</strong></p>
-        <p>Glad you are here 😃 ! Let's learn Pandas</p>
-      </div>
-
-    <!-- End Left Column -->
+  <!-- Navbar -->
+  <div class="w3-top fb-custom-share">
+    <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
+      <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4">Excel Killer</a>
     </div>
-
-    <!-- Middle Column -->
-    <div class="w3-col m7">
-
-      <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-        <span class="w3-right w3-opacity">100/20000 successfully solved</span>
-        <h4>Basics of Pandas</h4>
-        <hr class="w3-clear">
-        <p>Learn how to handle unwanted values, create subsets of dataframes, apply basic functions to dataframes using Pandas.</p>
-        <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="basics/">Let's Learn and Practice</a>
-
-        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom like"><i class="fa fa-thumbs-up"></i> 500 Likes</button>
-      </div>
-
-      <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-        <span class="w3-right w3-opacity">100/20000 successfully solved</span>
-        <h4>Understanding the data</h4>
-        <hr class="w3-clear">
-        <p>Learn how to handle unwanted values, create subsets of dataframes, apply basic functions to dataframes using Pandas.</p>
-        <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="understanding/">Let's Learn and Practice</a>
-
-        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom like"><i class="fa fa-thumbs-up"></i> 500 Likes</button>
-      </div>
-
-      <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-        <span class="w3-right w3-opacity">100/20000 successfully solved</span>
-        <h4>Cleaning the data using Pandas</h4>
-        <hr class="w3-clear">
-        <p>Learn how to handle unwanted values, create subsets of dataframes, apply basic functions to dataframes using Pandas.</p>
-        <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="cleaning/">Let's Learn and Practice</a>
-
-        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom like"><i class="fa fa-thumbs-up"></i> 500 Likes</button>
-      </div>
-
-      <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-        <span class="w3-right w3-opacity">100/20000 successfully solved</span>
-        <h4>Visualizing the data</h4>
-        <hr class="w3-clear">
-        <p>Learn how to handle unwanted values, create subsets of dataframes, apply basic functions to dataframes using Pandas.</p>
-        <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="visualize/">Let's Learn and Practice</a>
-
-        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom like"><i class="fa fa-thumbs-up"></i> 500 Likes</button>
-      </div>
-
-    <!-- End Middle Column -->
-    </div>
-  <!-- End Grid -->
   </div>
-<!-- End Page Container -->
-</div>
-<script>
-</script>
+  <!-- Page Container -->
+  <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
+    <!-- The Grid -->
+    <div class="w3-row">
+      <!-- Left Column -->
+      <div class="w3-col m3">
+        <br>
 
+        <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
+          <p><strong>Hey!</strong></p>
+          <p>Glad you are here 😃 !</p>
+          <p>Excel Killer is here to rescue you from the hassle of using Excel because there is a much better way to thrive using Pandas!!! </p>
+          <p>Let's learn Pandas! 🙌 </p>
+        </div>
+        <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
+            <p class="share-content">Are you having fun learning Pandas? Share on </p>
+            <img class="share-btn" style="margin-right: 10px" src="https://facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png" alt="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/'),'facebook-share-dialog','width=626,height=436'); return false;"/>
+            <img class="share-btn" src="https://www.dignitydreams.com/wp-content/uploads/2017/08/twitter-icon-basic-round-social-iconset-s-icons-0.png" alt="Share on Twitter" onclick="javascript:window.open('https://twitter.com/share?text=Excel Killer is here to rescue you from the hassle of using Excel because there is a much better way to thrive using Pandas&amp;url=https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/','Twitter-dialog','width=626,height=436'); return false;"/>
+<!--            <img class="share-btn" src="https://carlisletheacarlisletheatre.org/images/linkedin-logo-png-circle-2.jpg" alt="Share on Linkedin" onclick="javascript:window.open('https://www.linkedin.com/sharing/share-offsite/?url=https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/'); return false;"/>-->
+        </div>
+        <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
+            <p class="share-content">We would love to listen from you? Have any query, feeback, new topic in mind, anything...email us.  </p>
+            <img class="share-btn" style="margin-right: 10px" src="https://www.socialtalent.com/wp-content/uploads/2015/07/Gmail-Logo.png" alt="Email us"><a href="mailto:singh.anshu0612@gmail.com"></a></img>
+        </div>
+      </div>
+
+      <!-- Middle Column -->
+      <div class="w3-col m7">
+
+        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+          <span class="w3-right w3-opacity">100/20000 successfully solved</span>
+          <h4>Basics of Pandas</h4>
+          <hr class="w3-clear">
+          <p>Learn how to read and group data, add and select columns or rows using Pandas.</p>
+          <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="basics/">Let's Learn and Practice</a>
+          <a type="button" class="w3-button w3-theme-d1 w3-margin-bottom like"><i class="fa fa-thumbs-up"></i> 500 Likes</a>
+        </div>
+
+        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+          <span class="w3-right w3-opacity">100/20000 successfully solved</span>
+          <h4>Understanding the data</h4>
+          <hr class="w3-clear">
+          <p>Learn how to preview and get insights into data and apply statistics using Pandas.</p>
+          <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="understanding/">Let's Learn and Practice</a>
+
+          <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom like"><i class="fa fa-thumbs-up"></i> 500 Likes</button>
+        </div>
+
+        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+          <span class="w3-right w3-opacity">100/20000 successfully solved</span>
+          <h4>Cleaning the data using Pandas</h4>
+          <hr class="w3-clear">
+          <p>Learn how to handle unwanted values, create subsets of dataframes, apply basic functions to dataframes using Pandas.</p>
+          <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="cleaning/">Let's Learn and Practice</a>
+
+          <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom like"><i class="fa fa-thumbs-up"></i> 500 Likes</button>
+        </div>
+
+        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+          <span class="w3-right w3-opacity">100/20000 successfully solved</span>
+          <h4>Visualizing the data</h4>
+          <hr class="w3-clear">
+          <p>Learn how to create and get insights into graphs using Matplotlib. Further, you get to learn subplotting and data-to-ink ratio.</p>
+          <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="visualize/">Let's Learn and Practice</a>
+
+          <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom like"><i class="fa fa-thumbs-up"></i> 500 Likes</button>
+        </div>
+
+        <!-- End Middle Column -->
+      </div>
+      <!-- End Grid -->
+    </div>
+    <!-- End Page Container -->
+  </div>
 </body>
+
 </html>

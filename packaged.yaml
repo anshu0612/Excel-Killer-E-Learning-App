@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'Excel Killer
+
+  Template File
+
+  '
+Globals:
+  Function:
+    Timeout: 30
+Resources:
+  basicsActivity:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://excelkiller1/b2ef078801721154d2fbbdd9e1e93a2f
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.6
+      MemorySize: 1024
+      Events:
+        basicsPandas:
+          Type: Api
+          Properties:
+            Path: basics/
+            Method: ANY
+  understandingActivity:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://excelkiller1/d2052357e91032dac156e0f7214a9d33
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.6
+      MemorySize: 1024
+      Events:
+        understandingPandas:
+          Type: Api
+          Properties:
+            Path: understanding/
+            Method: ANY
+  cleaningActivity:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://excelkiller1/8ed587549902f899366b8127907b01b1
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.6
+      MemorySize: 1024
+      Events:
+        cleaningPandas:
+          Type: Api
+          Properties:
+            Path: cleaning/
+            Method: ANY
+  visualizingActivity:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://excelkiller1/66413a4f99f8f7729f4ebd5bd830dffa
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.6
+      MemorySize: 1024
+      Events:
+        visualizingPandas:
+          Type: Api
+          Properties:
+            Path: visualize/
+            Method: ANY
+  landingPage:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://excelkiller1/d07967cae8a28346f2dbf207320d25e2
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.6
+      MemorySize: 1024
+      Events:
+        landingPageExcelKiller:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
