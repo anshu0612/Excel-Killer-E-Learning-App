@@ -1,91 +1,82 @@
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147552064-1"></script>
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147552064-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-147552064-1');
+        </script>
+        <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/theme/default.css">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.css" />
+    </head>
+    <body>
+        <div style="width: 100%; display: flex;">
+            <h3 id="title">Excel Killer</h3>
+            <h1 class="md-display-2">Visualizing data using Pandas</h1>
+        </div>
+        <div id="app" style="background-color: #f5f5f5">
+            <md-tabs class="md-primary" >
+                <md-tab v-for="question in questions" :key=question.name v-bind:md-label=question.name+question.status>
+                    <doctest-activity v-bind:layout-things=question.layoutItems v-bind:question-name=question.name  @questionhandler="toggleQuestionStatus"/>
+                </md-tab>
+            </md-tabs>
+            </div>
+        </div>
+    </body>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vue-material@beta"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/python/python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-codemirror@4.0.6/dist/vue-codemirror.min.js"></script>
+    <title>Excel Killer</title>
     <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-
-        gtag('js', new Date());
-        gtag('config', 'UA-147552064-1');
-    </script>
-    <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/theme/default.css">
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.css"/>
-</head>
-<body>
-<div style="width: 100%; display: flex;">
-    <h3 id="title">Excel Killer</h3>
-    <h1 class="md-display-2">Cleaning the data using Pandas</h1>
-</div>
-<div id="app" style="background-color: #f5f5f5">
-    <md-tabs class="md-primary">
-        <md-tab v-for="question in questions" :key=question.name v-bind:md-label=question.name+question.status>
-            <doctest-activity v-bind:layout-things=question.layoutItems v-bind:question-name=question.name
-                              @questionhandler="toggleQuestionStatus"/>
-        </md-tab>
-    </md-tabs>
-</div>
-</div>
-</body>
-<script src="https://unpkg.com/vue"></script>
-<script src="https://unpkg.com/vue-material@beta"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/python/python.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue-codemirror@4.0.6/dist/vue-codemirror.min.js"></script>
-<title>Excel Killer</title>
-<script>
     Vue.use(VueMaterial.default)
     Vue.use(window.VueCodemirror)
-
     Vue.component('doctest-activity', {
         props: ['layoutThings', 'questionName'],
         data: function () {
             return {
-                answer: {jsonFeedback: '', htmlFeedback: '', textFeedback: '', isComplete: ''},
-                layoutItems: this.layoutThings,
-                cmOptions: {
-                    mode: 'python',
-                    lineNumbers: true
-                },
-                cmReadOnly: {
-                    lineNumbers: true,
-                    mode: "python",
-                    readOnly: true
-                }
+            answer:{jsonFeedback:'',htmlFeedback:'',textFeedback:'',isComplete: ''},
+            layoutItems: this.layoutThings,
+            cmOptions: {
+              mode: 'python',
+              lineNumbers: true
+            },
+            cmReadOnly: {
+              lineNumbers: true,
+              mode:  "python",
+              readOnly: true
             }
+        }
         },
         methods: {
             postContents: function () {
-                // comment: leaving the gatewayUrl empty - API will post back to itself
-                const gatewayUrl = '';
-                this.$set(this, 'answer', {jsonFeedback: '', htmlFeedback: '', textFeedback: '', isComplete: false});
-                fetch(gatewayUrl, {
-                    method: "POST",
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        shown: {0: this.layoutItems[0].content},
-                        editable: {0: this.layoutItems[1].content}
-                    })
-                }).then(response => {
-                    return response.json()
-                }).then(data => {
-                    this.answer = JSON.parse(JSON.stringify(data))
-                    this.answer.jsonFeedback = JSON.stringify(this.answer.jsonFeedback)
-                    return this.$emit('questionhandler', {data, questionName: this.questionName})
-                })
-            }
+            // comment: leaving the gatewayUrl empty - API will post back to itself
+            const gatewayUrl = '';
+            this.$set(this, 'answer', {jsonFeedback:'',htmlFeedback:'',textFeedback:'',isComplete:false});
+            fetch(gatewayUrl, {
+        method: "POST",
+        headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({shown:{0:this.layoutItems[0].content},editable:{0:this.layoutItems[1].content}})
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            this.answer = JSON.parse(JSON.stringify(data))
+            this.answer.jsonFeedback = JSON.stringify(this.answer.jsonFeedback)
+            return this.$emit('questionhandler',{data, questionName:this.questionName})
+            })
+         }
         },
         template:
-            `<div class="md-layout  md-gutter">
+        `<div class="md-layout  md-gutter">
             <div id="cardGroupCreator" class="md-layout-item md-size-100">
               <md-card>
                     <md-card-header>
@@ -96,15 +87,11 @@
                     </md-card-header>
                     <md-card-content>
                         <p class="md-subheading custom-subheading" >Introduction</p>
-                        <md-field>
-                            {{layoutItems[2].intro}}
-                            <!--  <img style="height: 144px; padding-right: 100px;" src="https://storage.ning.com/topology/rest/1.0/file/get/2808326258?profile=original"></img>  -->
-                        </md-field>
+                        <md-field v-html="layoutItems[2].intro"/>
+                        <!--  <img style="height: 144px; padding-right: 100px;" src="https://storage.ning.com/topology/rest/1.0/file/get/2808326258?profile=original"></img>  -->
                         <p class="md-subheading custom-subheading">How it works in MS Excel</p>
-                        <md-field>
-                            {{layoutItems[2].excelFunc}}
-                        </md-field>
-                        <p class="md-subheading custom-subheading">How Pandas help</p>
+                        <md-field v-html="layoutItems[2].excelFunc"/>
+                        <p class="md-subheading custom-subheading">How Matplotlib helps</p>
                         <md-field v-html="layoutItems[2].pandaFunc"/>
                     </md-card-content>
                 </md-card>
@@ -174,175 +161,106 @@
                     </md-card>
                 </div>
              </div>
-             <div id="cardGroupCreator" class="md-layout-item md-size-100">
-                <md-card>
-                        <md-card-header>
-                            <md-card-header-text>
-                                <div class="md-title section-topic">You might like these articles:</div>
-                                <div class="md-subhead">{{layoutItems[0].subHeader}}</div>
-                            </md-card-header-text>
-                        </md-card-header>
-                         <md-card-content>
-                            <md-field>
-                                <ul>
-                                    <li>
-                                        <a style='cursor:pointer' href=" https://jakevdp.github.io/PythonDataScienceHandbook/03.04-missing-values.html">Handling Missing Data</a>
-                                    </li>
-                                </ul>
-                            </md-field>
-                        </md-card-content>
-                 </md-card>
-             <div>
         </div>
         `
     })
-
     new Vue({
         el: '#app',
         data: function () {
             return {
-                questions: [
-                    {
-                        name: "Question 1 ", layoutItems: [
-                            {
-                                header: "Tests",
-                                subHeader: '',
-                                content: ">>> solution()\n{'Matt': 10.0, 'Sylvia': 15.0, 'Javier': 20.0}"
-                            },
-                            {
-                                header: "Editable Code Block",
-                                subHeader: 'Solve questions written in the code comments',
-                                content: "import pandas as pd\nfrom numpy import nan\n\ndef solution():\n\tdf = pd.DataFrame(data={'player': ['Matt', 'Sylvia', 'Javier', None], 'score': [10, nan, 20, 15]})\n\n\t# Start Coding from here\n\t# TODO: Drop rows where there isn't a player's name\n\n\t# TODO: Fill score columns missing value with column median\n\t# STEP 1: First count median here\n\t# STEP 2: Then apply fillna() command for the right column.\n\t \n\t# End Coding from here\n\t\n\t# Return the dictionary containing player name and score e.g: {'player1': 'score'}\n\treturn dict(zip(df['player'].values.tolist(), df['score'].values.tolist()))"
-                            },
-                            {
-                                header: "Handling Unwanted Values",
-                                subHeader: '',
-                                intro: "In real-life datasets you can often find data points that are either missing, or don’t represent an existing value. For example on a survey a person’s wrongfully added age could be listed as NaN (Not a Number), blank, 0 or 999. Let’s take a look at two different cases: Dropping rows with missing values and replacing the missing values.",
-                                excelFunc: "Overcoming these sort of errors in data often needs to be manually overwritten in Excel either by writing to single cells or deleting rows. Other option is to to create IF-functions that transform the values.",
-                                pandaFunc: "<div>In pandas we have two main functions designed for overcoming NaN-values: <ul style='line-height: 1.8;'> <li style='padding:0; margin:0'> <b>dropna()</b> - Used to dropping rows or columns with missing values <ul><li>Drop all columns with missing values using command <p class='command'>df = df.dropna(axis=’columns’)</p></li><li>Drop all rows with missing value on column gender, use command <p class='command'>df = df.dropna(axis=’index’, subset=[‘gender’])</p> </li></ul> </li> <li> <b>.fillna()</b> - Used to filling missing values on whole dataframe or given column<ul><li>Selecting rows that are over or equal to certain age value:<p class='command'>df = df.dropna(axis=’index’, subset=[‘gender’])</p></li><li>Replace missing values in column age with column’s median: <p class='command'> median = df[‘age’].median() <br/> df[‘age’] = df[‘age’].fillna(median)</p></li></ul></li></ul></div>"
-                            }], status: " "
-                    },
-
-                    {
-                        name: "Question 2 ", layoutItems: [
-                            {
-                                header: "Tests",
-                                subHeader: '',
-                                content: ">>> solution()\n{'female': ['Sylvia'], 'under_age': ['Matt', 'Sylvia']}"
-                            },
-                            {
-                                header: "Editable Code Block",
-                                subHeader: 'Solve questions written in the code comments',
-                                content: "import pandas as pd\nfrom numpy import nan\n\ndef solution():\n\tdf = pd.DataFrame(data={\n\t\t'player': ['Matt', 'Sylvia', 'Javier'],\n\t\t'gender': ['male', 'female', 'male'],\n\t\t'score': [10, 20, 15],\n\t\t'age': [15, 16, 20]\n\t})\n\n\t# Start Coding from here\n\t\n\t# Create dataframe of all the females to female_df using original df\n\tfemale_df = df[df.gender == 'female']\n\n\t# Create dataset of everyone under 20 year olds to underaged_df\n\tunderage_df = df[df.age < 20]\n\t\n    # End Coding from here\n\t\n\t# Return the list of female and underage players\n\treturn {'female': female_df['player'].values.tolist(), 'under_age': underage_df['player'].values.tolist()}"
-                            },
-                            {
-                                header: "Creating Subsets of Dataframes",
-                                subHeader: '',
-                                intro: "When performing analysis on our data, we sometimes want to select only a subset of the whole data. This can mean selecting only rows with certain values on a column or using comparison to filter out values.",
-                                excelFunc: "In excel you can use AutoFilter from the Data-tab to perform similar operations and follow the provided graphical interface. However this is often slow if there’s a lot of data or filtering are complicated.",
-                                pandaFunc: "<div>In pandas we can easily create subsets by using relational operators. : <ul style='line-height: 1.8;'> <li style='padding:0; margin:0'> Selecting rows that are equal or inequal to certain value <ul><li>Select only rows where country is Finland: <p class='command'>df = df[df[‘country’’] == ‘Finland]</p></li></ul> </li><li style='padding:0; margin:0'> Selecting rows that are not equal to certain value: <ul><li>Select only rows where gender is not male and create it as new dataframe: <p class='command'>non_male_df = df[df[‘gender’] != ‘male’]</p></li></ul> </li><li style='padding:0; margin:0'> Selecting rows that are over or equal to certain age value: <ul><li><p class='command'>df = df[df[‘age’] >= 30]</p></li></ul> </li></ul></div>"
-                            }], status: " "
-                    },
-
-
-                    {
-                        name: "Question 3 ", layoutItems: [
-                            {
-                                header: "Tests",
-                                subHeader: '',
-                                content: ">>> solution()\n62.33"
-                            },
-                            {
-                                header: "Editable Code Block",
-                                subHeader: 'Solve questions written in the code comments',
-                                content: "import pandas as pd\nimport numpy as np\nfrom random import randint\n\ndef solution():\n\t# Do not remove the below line, it is used for testing your solution\n\tnp.random.seed(0)\n\n\tdf = pd.DataFrame(data= {\n\t\t'player': ['Matt', 'Sylvia', 'Javier'],\n\t\t'round1': [90, 80, 82],\n\t\t'round2': [76, 66,  75]\n\t})\n\tdef new_round(prev_score):\n\t\treturn prev_score - np.random.randint(1,20)\n\n\t# Let’s play a game, every player starts with 100 points and in round 1 loses random amount of points.\n\t# Apply the above given function and generate the scores for round 3, remember to use scores for round 2 for this.\n\n\tdf['round3'] = df['round2'].apply(lambda curr_score: new_round(curr_score))\n\n\t# Compute the average of the round 3\n\tround3_avg = df['round3'].mean()\n\treturn round(round3_avg,2)"
-                            },
-                            {
-                                header: "Applying Simple Functions to Dataframes", subHeader: '',
-                                intro: "To really utilize the advantages that programming in python gives you is defining your own custom function (or finding one online) and using it to alter your dataset. Pandas offers really simple and good performing way to achieve this.",
-                                excelFunc: "Most of the data manipulation tasks can be achieved in Excel using combined formulas or VBA macros. However this is often ineffective and slow if amount of data is big or the calculations are complex.",
-                                pandaFunc: "<div>Applying functions can be divided to two main ways: <ul style='line-height: 1.8;'> <li style='padding:0; margin:0'> Using ready made functions <ul><li>Counting average age whole dataset using numpy library’s average function: <p class='command'>from numpy import sum <br/> df[‘age’].apply(sum)</p></li></ul> </li><li style='padding:0; margin:0'> Using custom made lambda functions <ul><li>Giving average weight based on gender with our self made function: <p class='command'>def give_weight(gender):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if gender == ‘male’:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 70<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if gender == ‘female’:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 60<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 65<br>df[‘weight’] = df[‘gender’].apply(lambda gender: give_weight(gender)</p></li></ul> </li></ul></div>"
-                            }], status: ""
-                    }
-                ]
-            }
+            questions:[
+                {name:"Practise 1 ", layoutItems: [
+                {header:"Tests",
+                subHeader:'', content:">>> solution()\n{'Matt': 10.0, 'Sylvia': 15.0, 'Javier': 20.0}"},
+                {header:"Editable Code Block", subHeader:"Solve questions written in the code comments", content:"import pandas as pd\nimport matplotlib.pyplot as plt\n\ndf = pd.DataFrame(data= {\n    'Player id': [1, 2, 3],\n    'Name': ['Matt', 'Sylvia', 'Javier'],\n    'Round 1 score': [10, 20, 15]\n})\n\n# This is a bad choice, let’s go black\nour_color = 'lightgrey'\n\n# Bar graph here, please!\nplt.plot(df['Player id'], df['Round 1 score'], color=our_color)\nplt.show()"},
+                {header:"Creating your first graph", subHeader:'',
+                intro:"For humans it's hard to understand meaning of even a small amount of numbers, not to even mention big amount of data. Visualising helps your brain to understand the true meaning of data and explain your analysis to other people. Also, visuals stick in people's long-term memory way easier than numbers. So, let's check how to create our first visuals using python's matplotlib 2 dimensional visualisation library.",
+                excelFunc: "Creating basic visualisations is rather easy using the given ready-made plot types. You just choose data you want to visualize, go to graph options and follow the provided wizard. However, when there's a lot of data, or you really want to personalize your graphs, you might run into trouble.",
+                pandaFunc: "<div>Creating a very simple plot can be divided into three main steps: <ul style='line-height: 1.8;'><li style='padding:0; margin:0'> Importing the matplotlib library by using the below command: <p class='command'>import matplotlib.pyplot as plt</p> </li><li>Plotting the data using the below command: <p class='command'>plt.plot(X, y) </p> where X is your datasets values for x-axis and y is the y-axis values.<ul><li>As data we can use python lists or pandas dataframe series along many other options.</li><li>You can change the plot type by replacing the word plot (line graph) with bar, scatter, hist etc. Go ahead and check more plot types from <a href='https://matplotlib.org/3.1.1/tutorials/introductory/sample_plots.html' target='_blank'> documentation</a></li><li>Plotting also gives you a huge amount of ways to customize your graphs such as color, label and line width. You can check them from <a href='https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.plot.html' target='_blank'>documentation</a></li></ul></li><li>Now that we have created our graph, we can show it by using the below command: <p class='command'>plt.show()</p></li></ul><img class='graph-1' src='https://excel-killer-images.s3.amazonaws.com/g1.jpg'/><br/><br/>Oh no! We stumbled across a bad visualisation. This is supposed to show scores for three rounds We can do better for sure! Someone has created a line plot in a situation where it doesn’t make sense. What you can do here: <ul style='line-height: 1.8;'><li style='padding:0; margin:0'> Bar graph would be ideal for displaying scores, so change it to that. \n</li><li>Also, the color choice is bad. Change it to blue for better visualisation.</li></ul></div>"}], status:" "},
+                {name:"Practise 2 ", layoutItems: [
+                {header:"Tests",
+                subHeader:'byteCodeChecker() and codeInfoChecker() are our functions used in these tests', content:">>> ifFunc(True,2)\n2 \n>>> ifFunc(bool('a'),11)\n11 \n>>> byteCodeChecker(ifFunc, 'ARGREPR', '==')\n'== not found'"},
+                {header:"Editable Code Block", subHeader:'Solve questions written in the code comments', content:"import pandas as pd\nimport matplotlib.pyplot as plt\n\ndf = pd.DataFrame(data= {\n    'Player id': [1, 2, 3],\n    'Name': ['Matt', 'Sylvia', 'Javier'],\n    'Round 1 score': [10, 20, 15]\n})\n\nour_color = 'black'\n\nplt.bar(df['Player id'], df['Round 1 score'], color=our_color)\n\ntitle = 'Round 1 scores per player'\n# Add the title variable to the graph here\nplt.title()\n\nx_label = 'Player name'\ny_label = 'Score'\n\n# Add the axis labels for the plot here\n\n\n# Convert x labels to player names, refer the stackoverflow answer for help\n\nplt.show()\n"},
+                {header:"Helping the viewer understand the graph", subHeader:'',
+                intro:"It is very important to explain your graph for the viewer in order to tell the story of data. However, sometimes you can’t use words, but all you have is your visualisation. So we need to guide the viewer in the picture itself.",
+                excelFunc: "Adding chart and axis titles is easy in Excel. You simply select the chart title or axis title box and write what you want in those boxes.",
+                pandaFunc: "<div>Matplotlib’s way of representing a plot can be summarized with following picture : <br/><br/><img src=http://s3.amazonaws.com/plat4.is5003/anatomy.7d033ebbfbc8.png><br/><br/>In some cases matplotlib’s syntax can be a bit confusing since the library includes so much options for customization. Usually the easiest way is finding ways to your goal by writing what you want to achieve in google or stackoverflow. Python and matplotlib have a huge community behind them, which usually means someone has already asked and answered your question. Now let’s take a quick look, how to add informative text to our graphs:<br/><ul style='line-height: 1.8;'><li style='padding:0; margin:0'> Adding a graph title can be achieved with code <b>plt.title('Your text here')</b> before showing the graph. </li><ul><li>Adding axis labels is similar but instead of title you call plt for xlabel or ylabel.</li></ul><li>Converting floating x-axis to have your custom text is also a simple task to do. Let's take advantage of the community and check <a href='https://stackoverflow.com/a/3101288' target='_blank'>this answer</a> from stackoverflow.</li></ul></div>"}], status:" "},
+                {name:"Practise 3 ", layoutItems: [
+                {header:"Tests",
+                subHeader:'byteCodeChecker() and codeInfoChecker() are our functions used in these tests', content:">>> ifFunc(True,2)\n2 \n>>> ifFunc(bool('a'),11)\n11 \n>>> byteCodeChecker(ifFunc, 'ARGREPR', '==')\n'== not found'"},
+                {header:"Editable Code Block", subHeader:'Solve questions written in the code comments', content:"import pandas as pd\nimport matplotlib.pyplot as plt\n\ndf = pd.DataFrame(data= {\n    'Player id': [1, 2, 3],\n    'Name': ['Matt', 'Sylvia', 'Javier'],\n    'Round 1 score': [10, 20, 15], \n    'Round 2 score': [12, 8, 20]\n})\n\nplt.subplot(2, 2, 1)\nplt.bar(df['Player id'], df['Round 1 score'], color=our_color)\nplt.title('Round 1 scores')\nplt.ylabel('Score')\nplt.xticks(df['Player id'], df['Name'])\n\n# Add subplot line here\n\n# Plot the image here, if you have trouble, just refer to the earlier plotting\n#plt.title('Round 2 scores')\n#plt.xticks(df['Player id'], df['Name'])\n\nplt.subplot(2, 1, 2)\nplt.bar(df['Player id'], df['Round 1 score'] + df['Round 2 score'])\nplt.title('End result')\nplt.ylabel('Score')\nplt.xticks(df['Player id'], df['Name'])\n\nplt.tight_layout() \nplt.show()\n"},
+                {header:"Subplotting and data-to-ink ratio", subHeader:'',
+                intro:"<div>To really understand the greatness of plotting graphs in python, take a look at the examples provided in the <a href='https://matplotlib.org/3.1.1/gallery/index.html' target='_blank'>matplotlib gallery</a>.The range of graphs is really enormous and matplotlib makes it easily possible to combine plots to each other. Let’s think how we can still improve our graph.</div>",
+                excelFunc:"Excel has quite many built-in additionalities to their graphs. However these are often not too customizable and they might require quite complex vba macro coding.",
+                pandaFunc: "<div>One image doesn’t always tell the full story, but instead we might want to combine multiple plots to one. This is called subplotting. <ul style='line-height: 1.8;'><li style='padding:0; margin:0'> This can be done with calling <p class='command'>plt.subplot()</p> and giving three numbers as parameters: number of rows, number of columns and index.</li><ul><li>If we for example want 2 plots in the same row, we would first plot the left image with <b>plt.subplot(1, 2, 1)</b> and second with <b>plt.subplot(1, 2, 2)</b>. More info <a href='https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.subplot.html' target='_blank'>here</a></li></ul></ul>When creating visualisations we should always think of the <a href='https://infovis-wiki.net/wiki/Data-Ink_Ratio' target='_blank'>data-ink ratio</a>.This means things that don’t add value to the visualisation, should be removed. Otherwise they just take attention out of the main parts. This of course doesn’t mean removing everything except the data, because most of time axes and even grid lines add a lot of information and readability for the graph.</div>"
+                }], status:""}
+            ]
+        }
         },
-        methods: {
-            toggleQuestionStatus(response) {
-                console.log(response)
+         methods: {
+            toggleQuestionStatus (response) {
+            console.log(response)
                 const {data, questionName} = response
                 if (data.htmlFeedback) {
                     const searchText = data.htmlFeedback
                     searchText.search(/b2d8b2/) !== -1 ?
                         searchText.search(/#ff9999/) == -1 ?
-                            this.questions.find(item => item.name === questionName).status = " ✅️"
-                            :
-                            this.questions.find(item => item.name === questionName).status = " 🔴"
+                        this.questions.find(item => item.name === questionName).status = " ✅️"
                         :
-                        this.questions.find(item => item.name === questionName).status = " ❌"
+                        this.questions.find(item => item.name === questionName).status = " 🔴"
+                    :
+                    this.questions.find(item => item.name === questionName).status = " ❌"
                 }
             }
         }
-    })
-</script>
-<style lang="scss" scoped>
+      })
+    </script>
+    <style lang="scss" scoped>
     .md-field.md-theme-default::after {
         background-color: #fff;
     }
-
     .md-tabs.md-theme-default.md-primary .md-tabs-navigation .md-button.md-active {
         color: #fff;
         color: var(--md-theme-default-text-primary-on-primary, #FCD116);
     }
-
     .md-tabs-navigation .md-button {
         height: 20px;
     }
-
     body {
         background-color: #506987;
     }
-
     .md-card {
         width: 90%;
         margin: 20px;
         display: inline-block;
         vertical-align: top;
-        min-height: 200px
+        min-height:200px
     }
-
     .section-topic {
         color: rgb(67, 114, 170);
     }
-
     .md-card-content {
         padding-bottom: 16px !important;
     }
-
     button {
-        display: block;
+        display:block;
         margin: 20px 60px 20px 60px;
-        width: 200px !important;
+        width:200px !important;
     }
-
     #cardGroupCreator {
-        display: flex;
-        flex-direction: column;
+        display:flex;
+        flex-direction:column;
         padding-right: 0px
     }
-
     #cardGroupPreview .md-card {
         width: 90%;
     }
-
-    #cardGroupPreview {
+    #cardGroupPreview{
         padding-left: 0px
     }
-
-    #cardGroupPreview .md-tab {
-        height: 100%
+    #cardGroupPreview .md-tab{
+        height:100%
     }
-
     .command {
         color: #3A3A38;
         background-color: #EDEDED;
@@ -352,107 +270,88 @@
         margin: 10px 0;
         width: max-content;
     }
-
     textarea {
         font-size: 1rem !important;
         min-height: 175px !important
     }
-
-    .md-tabs {
-        width: 100%;
+    .md-tabs{
+        width:100%;
     }
-
-    .md-tab {
+    .md-tab{
         overflow-x: auto;
     }
-
     .md-tab::-webkit-scrollbar {
-        width: 0px;
+    width: 0px;
     }
-
     html {
-        width: 100%;
-        margin: auto;
+        width:100%;
+        margin:auto;
         mix-blend-mode: darken
     }
-
     .md-card {
         width: 96%;
     }
-
-    h1 {
-        padding: 20px;
-        margin: auto;
+    h1{
+        padding:20px;
+        margin:auto;
         text-align: center;
         color: #fff !important;
     }
-
     .md-tabs.md-theme-default.md-primary .md-tabs-navigation {
         background-color: #448aff;
         background-color: var(--md-theme-default-primary-on-background,
         #26466D);
     }
-
     .md-content.md-theme-default {
         background-color: #f5f5f5;
     }
-
-    .md-content {
-        min-height: 300px
+    .md-content{
+        min-height:300px
     }
-
-    .md-tabs-container, .md-tabs-container .md-tab textarea, .md-tabs-content {
-        height: 100% !important
+    .md-tabs-container, .md-tabs-container .md-tab textarea, .md-tabs-content{
+        height:100% !important
     }
-
-    .md-field {
-        margin: 0px;
-        padding: 0px
+    .md-field{
+        margin:0px;
+        padding:0px
     }
-
-    .md-tabs-navigation {
-        justify-content: center !important
+    .md-tabs-navigation{
+        justify-content:center !important
     }
-
-    .md-card-media {
-        width: 400px !important
+    .md-card-media{
+        width:400px !important
     }
-
     .custom-subheading {
         padding-bottom: 2px;
-        color: #236B8E;
-    "
+        color: #236B8E;"
     }
-
     .md-field {
         margin-bottom: 10px;
     }
-
     .md-card {
         min-height: 0;
     }
-
     br {
         margin: 0;
     }
-
+    .graph-1 {
+       height: 300px;
+        width: 300px
+    }
     #title {
         margin-left: 27px;
         position: absolute;
         font-weight: 200;
         color: #fff;
     }
-
-    .md-button {
-        margin: 10px !important
+    .md-button{
+        margin:10px !important
     }
-
-    .cm-s-default {
-        height: 100%
+    .cm-s-default{
+        height:100%
     }
-
-    .md-card-header {
-        padding: 0 16px 16px 16px
+    .md-card-header{
+        padding:0 16px 16px 16px
     }
-</style>
+    </style>
 </html>
