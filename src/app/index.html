@@ -117,7 +117,10 @@
           <p>3. Adding new columns and rows using Pandas <span class="w3-right w3-opacity">{{activity_counts.basics[3].correct}}/{{activity_counts.basics[3].correct+activity_counts.basics[3].incorrect}} successfully solved</span></p>
           <p>4. Basic grouping of data using Pandas <span class="w3-right w3-opacity">{{activity_counts.basics[4].correct}}/{{activity_counts.basics[4].correct+activity_counts.basics[4].incorrect}} successfully solved</span></p>
           <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/basics/">Let's Learn and Practice</a>
-          <a type="button" class="w3-button w3-theme-d1 w3-margin-bottom like"><i class="fa fa-thumbs-up"></i> 22 Likes</a>
+          <form method="post">
+            <input type="hidden" value="basics" name="act"/>
+            <button class="w3-button w3-theme-d1 w3-margin-bottom like" name="forwardBtn" type="submit"><i class="fa fa-thumbs-up"></i> {{like_count.basics}} Likes</button>
+          </form>
         </div>
 
         <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
@@ -130,7 +133,10 @@
           <p>4. Applying basic statistics using Pandas  <span class="w3-right w3-opacity">{{activity_counts.understanding[4].correct}}/{{activity_counts.understanding[4].correct+activity_counts.understanding[4].incorrect}} successfully solved</span></p>
 <!--          <p>Learn how to preview and get insights into data and apply statistics using Pandas.</p>-->
           <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/understanding/">Let's Learn and Practice</a>
-          <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom like"><i class="fa fa-thumbs-up"></i> 30 Likes</button>
+          <form method="post">
+            <input type="hidden" value="understanding" name="act"/>
+            <button class="w3-button w3-theme-d1 w3-margin-bottom like" name="forwardBtn" type="submit"><i class="fa fa-thumbs-up"></i> {{like_count.understanding}} Likes</button>
+          </form>
         </div>
 
         <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
@@ -142,7 +148,10 @@
           <p>3. Applying simple functions to dataframes <span class="w3-right w3-opacity">{{activity_counts.cleaning[3].correct}}/{{activity_counts.cleaning[3].correct+activity_counts.cleaning[2].incorrect}} successfully solved</span></p>
 <!--          <p>Learn how to handle unwanted values, create subsets of dataframes, apply basic functions to dataframes using Pandas.</p>-->
           <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/cleaning/">Let's Learn and Practice</a>
-          <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom like"><i class="fa fa-thumbs-up"></i> 20 Likes</button>
+          <form method="post">
+            <input type="hidden" value="cleaning" name="act"/>
+            <button class="w3-button w3-theme-d1 w3-margin-bottom like" name="forwardBtn" type="submit"><i class="fa fa-thumbs-up"></i> {{like_count.cleaning}} Likes</button>
+          </form>
         </div>
 
         <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
@@ -154,7 +163,10 @@
           <p>2. Helping viewer understanding the graph  <span class="w3-right w3-opacity">{{activity_counts.visualize[2].correct}}/{{activity_counts.visualize[2].correct+activity_counts.visualize[2].incorrect}} successfully solved</span></p>
           <p>3. Subplotting and data-to-ink ratio <span class="w3-right w3-opacity">{{activity_counts.visualize[3].correct}}/{{activity_counts.visualize[3].correct+activity_counts.visualize[3].incorrect}} successfully solved</span></p>
           <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/visualize/">Let's Learn and Practice</a>
-          <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom like"><i class="fa fa-thumbs-up"></i> 10 Likes</button>
+          <form method="post">
+            <input type="hidden" value="visualize" name="act"/>
+            <button class="w3-button w3-theme-d1 w3-margin-bottom like" name="forwardBtn" type="submit"><i class="fa fa-thumbs-up"></i> {{like_count.visualize}} Likes</button>
+          </form>
         </div>
         <!-- End Middle Column -->
       </div>
