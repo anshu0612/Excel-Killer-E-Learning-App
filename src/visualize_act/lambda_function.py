@@ -5,17 +5,19 @@ import traceback
 import doctest
 import io
 import sys
+import boto3
+from uuid import uuid4
 
 
 def lambda_handler(event, context):
     def run_local(requestDict):
+
         byteCodeChecker = "\ndef byteCodeChecker(function, field, value):\n import dis\n byteCode = dis.Bytecode(function)\n fields = {'OPNAME':0, 'ARGREPR':3} \n for instruction in byteCode:\n  if instruction[fields[field]] == value:\n   return f'found {value}'\n else:\n  return f'{value} not found'"
         codeInfoChecker = "\ndef codeInfoChecker(function, value):\n import dis\n codeInfo = dis.code_info(function)\n if value in codeInfo:\n  return f'found {value}'\n else:\n  return f'{value} not found'"
         solution = requestDict['solution'] + codeInfoChecker + byteCodeChecker
         tests = requestDict['tests']
         output = io.StringIO()
         sys.stdout = output
-
         try:
             namespace = {}
             compiled = compile('import json', 'submitted code', 'exec')
@@ -71,12 +73,23 @@ def lambda_handler(event, context):
         }
 
     if method == 'POST':
+        solved = False
+        question = None
         import re
         bodyContent = event.get('body', {})
         parsedBodyContent = json.loads(bodyContent)
         testCases = re.sub('&zwnj;.*&zwnj;', '', parsedBodyContent["shown"]["0"], flags=re.DOTALL)
         solution = parsedBodyContent["editable"]["0"]
-
+        graph_url = ''
+        if 'Practise 1' in solution:
+            graph_url = 'https://excel-killer-images.s3.amazonaws.com/g6.png'
+            question = 1
+        if 'Practise 2' in solution:
+            graph_url = 'https://excel-killer-images.s3.amazonaws.com/g7.png'
+            question = 2
+        if 'Practise 3' in solution:
+            graph_url = 'https://excel-killer-images.s3.amazonaws.com/g8.png'
+            question = 3
         timeout = False
 
         # handler function that tell the signal module to execute
@@ -117,6 +130,7 @@ def lambda_handler(event, context):
                 correctText = resultContent[i]["correct"]
                 callText = resultContent[i]["call"]
                 if str(expectedText) == str(receivedText):
+                    solved = True
                     textResults = textResults + "\nHurray! You have passed the test case. You called {0} and received {1} against the expected value of {2}.\n".format(
                         callText, receivedText, expectedText)
                     textBackgroundColor = "#b2d8b2"
@@ -187,6 +201,12 @@ def lambda_handler(event, context):
                 </style>
             </html>
             """.format(overallResults, tableContents)
+        try:
+            client = boto3.resource('dynamodb')
+            table = client.Table("excel-killer")
+            table.put_item(Item={'id': str(uuid4()), 'activity': 'visualize', 'question': question, 'solved': solved})
+        except Exception as e:
+            print(e)
         return {
             "statusCode": 200,
             "headers": {
@@ -196,6 +216,7 @@ def lambda_handler(event, context):
                 "isComplete": jsonResponseData.get("solved"),
                 "jsonFeedback": jsonResponseData,
                 "htmlFeedback": htmlResults,
-                "textFeedback": textResults
+                "textFeedback": textResults,
+                "graph": graph_url
             })
         }

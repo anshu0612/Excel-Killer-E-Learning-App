@@ -18,9 +18,9 @@ def post_method():
     """
     print ("HEY")
     print(request.body)
-    # str = lambda_handler({"httpMethod": "POST", "body": a}, '')
-    # return str["body"]
-    return "HEELO"
+    str = lambda_handler({"httpMethod": "POST", "body": a}, '')
+    return str["body"]
+
 
 if __name__ == '__main__':
     app.run(debug=True)

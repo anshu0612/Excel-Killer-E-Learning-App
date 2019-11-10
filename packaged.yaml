@@ -12,7 +12,7 @@ Resources:
   basicsActivity:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://excelkiller1/d325101bf7d7730313b0278934833990
+      CodeUri: s3://excelkiller1/d6b0a17994e5e388b99af41a46d6fb85
       Handler: lambda_function.lambda_handler
       Runtime: python3.6
       MemorySize: 1024
@@ -25,7 +25,7 @@ Resources:
   understandingActivity:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://excelkiller1/759b19b938563393dfad2ab979e6cb76
+      CodeUri: s3://excelkiller1/ba26c6c89ea10ef3ccbe556274a5de21
       Handler: lambda_function.lambda_handler
       Runtime: python3.6
       MemorySize: 1024
@@ -38,7 +38,7 @@ Resources:
   cleaningActivity:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://excelkiller1/b3947a509428569ff0a647eaa764d3d7
+      CodeUri: s3://excelkiller1/b44bbe2f03233cfd60e48e94c5deee40
       Handler: lambda_function.lambda_handler
       Runtime: python3.6
       MemorySize: 1024
@@ -51,7 +51,7 @@ Resources:
   visualizingActivity:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://excelkiller1/5994f7511728cb2bdb54ea30b068cd6b
+      CodeUri: s3://excelkiller1/e0c0585dec1ca8e0a6a5ec2df4e57c14
       Handler: lambda_function.lambda_handler
       Runtime: python3.6
       MemorySize: 1024
@@ -64,7 +64,7 @@ Resources:
   landingPage:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://excelkiller1/0365f7382383ed60653bea02204727a2
+      CodeUri: s3://excelkiller1/f8a000bd34ff57da7d96c87578012739
       Handler: lambda_function.lambda_handler
       Runtime: python3.6
       MemorySize: 1024

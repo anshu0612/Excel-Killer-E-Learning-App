@@ -5,6 +5,8 @@ import traceback
 import doctest
 import io
 import sys
+import boto3
+from uuid import uuid4
 
 
 def lambda_handler(event, context):
@@ -71,6 +73,8 @@ def lambda_handler(event, context):
         }
 
     if method == 'POST':
+        solved = False
+        question = None
         import re
         bodyContent = event.get('body', {})
         parsedBodyContent = json.loads(bodyContent)
@@ -78,7 +82,14 @@ def lambda_handler(event, context):
         solution = parsedBodyContent["editable"]["0"]
 
         timeout = False
-
+        if 'Practise 1' in solution:
+            question = 1
+        if 'Practise 2' in solution:
+            question = 2
+        if 'Practise 3' in solution:
+            question = 3
+        if 'Practise 4' in solution:
+            question = 4
         # handler function that tell the signal module to execute
         # our own function when SIGALRM signal received.
         def timeout_handler(num, stack):
@@ -117,6 +128,7 @@ def lambda_handler(event, context):
                 correctText = resultContent[i]["correct"]
                 callText = resultContent[i]["call"]
                 if str(expectedText) == str(receivedText):
+                    solved = True
                     textResults = textResults + "\nHurray! You have passed the test case. You called {0} and received {1} against the expected value of {2}.\n".format(
                         callText, receivedText, expectedText)
                     textBackgroundColor = "#b2d8b2"
@@ -187,6 +199,12 @@ def lambda_handler(event, context):
                 </style>
             </html>
             """.format(overallResults, tableContents)
+        try:
+            client = boto3.resource('dynamodb')
+            table = client.Table("excel-killer")
+            table.put_item(Item={'id': str(uuid4()), 'activity': 'understanding', 'question': question, 'solved': solved})
+        except Exception as e:
+            print(e)
         return {
             "statusCode": 200,
             "headers": {
