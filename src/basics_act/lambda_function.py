@@ -74,7 +74,7 @@ def lambda_handler(event, context):
 
     if method == 'POST':
         solved = False
-        question = None
+        question = 0
         import re
         bodyContent = event.get('body', {})
         parsedBodyContent = json.loads(bodyContent)

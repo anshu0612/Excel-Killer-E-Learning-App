@@ -74,7 +74,7 @@ def lambda_handler(event, context):
 
     if method == 'POST':
         solved = False
-        question = None
+        question = 0
         import re
         bodyContent = event.get('body', {})
         parsedBodyContent = json.loads(bodyContent)
@@ -184,6 +184,7 @@ def lambda_handler(event, context):
                                 {1}
                             </tbody>
                         </table>
+                        <img src="{2}" alt="graph/>
                     </div>
                 </body>
                 <style>
@@ -200,7 +201,7 @@ def lambda_handler(event, context):
                 }}
                 </style>
             </html>
-            """.format(overallResults, tableContents)
+            """.format(overallResults, tableContents, graph_url)
         try:
             client = boto3.resource('dynamodb')
             table = client.Table("excel-killer")
