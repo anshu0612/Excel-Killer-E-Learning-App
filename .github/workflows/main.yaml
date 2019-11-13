@@ -1,26 +1,26 @@
-name: Deploy Lambda Function on push
-on: [push]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout master
-        uses: actions/checkout@master
-      - name: Setup Python
-        uses: actions/setup-python@master
-        with:
-          python-version: "3.6"
-      - name: deploy lambda function
-        uses: ./
-        env:
-          AWS_DEFAULT_REGION: "us-east-1"
-          STACK_NAME: ${{ secrets.STACK_NAME }}
-          LAMBDA_RUNTIME: "python3.6" # See identifers at https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html
-          LAMBDA_HANDLER: "lambda_function"
-          LAMBDA_MEMORY: 1024
-          LAMBDA_TIMEOUT: 40
-          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
-          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#name: Deploy Lambda Function on push
+#on: [push]
+#
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: checkout master
+#        uses: actions/checkout@master
+#      - name: Setup Python
+#        uses: actions/setup-python@master
+#        with:
+#          python-version: "3.6"
+#      - name: deploy lambda function
+#        uses: ./
+#        env:
+#          AWS_DEFAULT_REGION: "us-east-1"
+#          STACK_NAME: ${{ secrets.STACK_NAME }}
+#          LAMBDA_RUNTIME: "python3.6" # See identifers at https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html
+#          LAMBDA_HANDLER: "lambda_function"
+#          LAMBDA_MEMORY: 1024
+#          LAMBDA_TIMEOUT: 40
+#          BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+#          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
