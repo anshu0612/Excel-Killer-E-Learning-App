@@ -1,16 +1,16 @@
-#name: Deploy Lambda Function on push
-#on: [push]
-#
-#jobs:
-#  build:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: checkout master
-#        uses: actions/checkout@master
-#      - name: Setup Python
-#        uses: actions/setup-python@master
-#        with:
-#          python-version: "3.6"
+name: Deploy Lambda Function on push
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout master
+        uses: actions/checkout@master
+      - name: Setup Python
+        uses: actions/setup-python@master
+        with:
+          python-version: "3.6"
 #      - name: deploy lambda function
 #        uses: ./
 #        env:

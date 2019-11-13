@@ -1,1 +1,25 @@
 language: python
+python:
+- '3.6'
+branches:
+  only: master
+install:
+- pip install awscli
+- pip install aws-sam-cli
+script:
+- sam build
+- sam package --output-template-file packaged.yaml --s3-bucket excelkiller1
+deploy:
+  provider: script
+  script: sam deploy --template-file packaged.yaml --region us-east-1 --capabilities
+    CAPABILITY_IAM --stack-name aws-excel-killer
+  skip_cleanup: true
+  on:
+    branch: master
+notifications:
+  email:
+    on_failure: always
+env:
+  global:
+  - secure: QpSXcevdyWq8DIV/l8goidMoytA44g5u/bl1NHb4hdqptH9vVtrjHhRKi+3q0LyL4WXL1JPdCE7yVbXXSXt1FjJIU27/XRN0Bc09eP+Ma02T78vzm16F+BCheI2kw7/zc6gGwRQdaEGsTgx9husrEg4ror+t1mmGLU4TLY5ePKUC0e8otOY9Uc4+PUZmiOQLBqa5WAuVkYowiCyTk0xGy9+IwAGOMoeVZq/NqzbTk8vvifDi0emnls0Osgu93fqes1CX2pKEFykPueoemm73IfNmxIX1N5wGBJ9Mg8cLqK42QnOxXt6jDbclHUrx/OcYrQZnhg8EqGeKMRj9bXXtUkSG/QtkQVi23Y9ncYGBryUEWF6LFBE3UJqr33YQqueakz2DoKikWZcndsKALD0e7NaPWxcE5At3T6FkUNqxuGJvV4+ZhCAvCUcFYhpKwb09Ye5ILh5fVqtYf+k4MMqizKKpYJyFoAcY6Pq/3jok1l3KcA2pm65QXj+h84QoV98HRIq08rpu8MBPCsGrLUcvA4OmpbdUedWqidm433GmqhnWEfaNovQP4ckwVU6DguqGgYA50mdLEu2qABxlyZ4we6Ap7vV0aaAjkJF3/QCKlOfT4avmIRepBw3mWOevUytrTQJ15mAdwponyHeTEFGeA3HQKUVJgArTAgiqn39YYns=
+  - secure: iQz7Wcze0mDA3ZxYM0j5kPwCuX5ZdSbWbkXdtC5Q0Qo46HVMK48J13zqHRx+iRDX5+05AcScnQjLomzdPBIWDBEku62WaTkCfgMu9LMRS2nQec/EmxeELk/LrZRGXThfRvRMt9PPHERGcsnH2OCjk6BIdsEIY1UfKCD9aBfuv0a6Q9UkeLGocjyfL+J8TUr4ldzhC8XQHl8GrmdMk1ZMglHbYYvMO96eU8fEdlqrkZokpzcvt2KVCAq3TKwAnaO4SiK9P0kt5s2fLZTyE/PodA18fTDPYyrGFB/ZBCT6UxWaPW8IMyTDWe8hD5zQe0/yjLrCiVKzCoyIxO+QGcvmUxl5KDKR5PtAYlqHagE/SZX/605zrJa8uLTer9UwtW7r7pkScR8B1Fcd8bQEtZshSu6/rTeStb+tcK/BQ5Buxjfi1nvFF0LlAlxKS8pZoWr+Wq1lL3ymEnDhM7VR5qgbYKB5+37xcjriIiWcb2Rxk4gmvLN1hnpQI3COudJexxdIlYJ8Se41zxSTJgNrqp39m2oIlsMLf6n4OPm9Bx0uqYp43l3TK63YU8Q6QMWpomBvKrQEcFTVWvrPwSd8IUnm0A8RW0brOABqh3Kc7jkKQQ6Hi1qivsRoyVexXUgPLKu60qrh5zqbbs3G29LZr8WoyAsAlMBrz3KsInkvrkXdg7E=
