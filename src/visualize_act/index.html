@@ -132,8 +132,6 @@
                                 <md-tabs class="md-primary">
                                     <md-tab id="tab-htmlResults" md-label="HTML results">
                                         <div v-html="answer.htmlFeedback"></div>
-                                        <img :src="answer.graph" v-if="answer.isComplete === true"/>
-
                                     </md-tab>
                                     <md-tab id="tab-jsonResults" md-label="JSON results">
                                         <md-textarea v-model="answer.jsonFeedback" readonly></md-textarea>

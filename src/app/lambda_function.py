@@ -4,18 +4,23 @@ from jinja2 import Template
 from uuid import uuid4
 from urllib.parse import urlparse, parse_qs
 
+
 def lambda_handler(event, context):
     method = event.get('httpMethod', {})
 
     def get_landing_page():
         activity_counts = {
-            "basics": {1: {"correct": 0, "incorrect": 0}, 2: {"correct": 0, "incorrect": 0},
+            "basics": {0: {"correct": 0, "incorrect": 0}, 1: {"correct": 0, "incorrect": 0},
+                       2: {"correct": 0, "incorrect": 0},
                        3: {"correct": 0, "incorrect": 0}, 4: {"correct": 0, "incorrect": 0}},
-            "understanding": {1: {"correct": 0, "incorrect": 0}, 2: {"correct": 0, "incorrect": 0},
+            "understanding": {0: {"correct": 0, "incorrect": 0}, 1: {"correct": 0, "incorrect": 0},
+                              2: {"correct": 0, "incorrect": 0},
                               3: {"correct": 0, "incorrect": 0}, 4: {"correct": 0, "incorrect": 0}},
-            "cleaning": {1: {"correct": 0, "incorrect": 0}, 2: {"correct": 0, "incorrect": 0},
+            "cleaning": {0: {"correct": 0, "incorrect": 0}, 1: {"correct": 0, "incorrect": 0},
+                         2: {"correct": 0, "incorrect": 0},
                          3: {"correct": 0, "incorrect": 0}},
-            "visualize": {1: {"correct": 0, "incorrect": 0}, 2: {"correct": 0, "incorrect": 0},
+            "visualize": {0: {"correct": 0, "incorrect": 0}, 1: {"correct": 0, "incorrect": 0},
+                          2: {"correct": 0, "incorrect": 0},
                           3: {"correct": 0, "incorrect": 0}}
         }
         like_count = {
