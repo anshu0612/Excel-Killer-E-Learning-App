@@ -1,0 +1,384 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147552064-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-147552064-1');
+        </script>
+        <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/theme/default.css">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.css" />
+    </head>
+    <body>
+        <div style="width: 100%; display: flex;">
+            <h3 id="title">Excel Killer</h3>
+            <h1 class="md-display-2">Basics of Pandas</h1>
+        </div>
+        <div id="app" style="background-color: #f5f5f5">
+            <md-tabs class="md-primary" >
+                <md-tab v-for="question in questions" :key=question.name v-bind:md-label=question.name+question.status>
+                    <doctest-activity v-bind:layout-things=question.layoutItems v-bind:question-name=question.name  @questionhandler="toggleQuestionStatus"/>
+                </md-tab>
+            </md-tabs>
+            </div>
+        </div>
+    </body>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vue-material@beta"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/python/python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-codemirror@4.0.6/dist/vue-codemirror.min.js"></script>
+    <title>Excel Killer</title>
+    <script>
+    Vue.use(VueMaterial.default)
+    Vue.use(window.VueCodemirror)
+    Vue.component('doctest-activity', {
+        props: ['layoutThings', 'questionName'],
+        data: function () {
+            return {
+            answer:{jsonFeedback:'',htmlFeedback:'',textFeedback:'',isComplete: ''},
+            layoutItems: this.layoutThings,
+            cmOptions: {
+              mode: 'python',
+              lineNumbers: true
+            },
+            cmReadOnly: {
+              lineNumbers: true,
+              mode:  "python",
+              readOnly: true
+            }
+        }
+        },
+        methods: {
+            postContents: function () {
+            // comment: leaving the gatewayUrl empty - API will post back to itself
+            const gatewayUrl = '';
+            this.$set(this, 'answer', {jsonFeedback:'',htmlFeedback:'',textFeedback:'',isComplete:false});
+            fetch(gatewayUrl, {
+        method: "POST",
+        headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({shown:{0:this.layoutItems[0].content},editable:{0:this.layoutItems[1].content}})
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            this.answer = JSON.parse(JSON.stringify(data))
+            this.answer.jsonFeedback = JSON.stringify(this.answer.jsonFeedback)
+            return this.$emit('questionhandler',{data, questionName:this.questionName})
+            })
+         }
+        },
+        template:
+        `<div class="md-layout  md-gutter">
+            <div id="cardGroupCreator" class="md-layout-item md-size-100">
+              <md-card>
+                    <md-card-header>
+                        <md-card-header-text>
+                        <br>
+                            <div class="md-title" style="color: #4372AA;">{{ layoutItems[2].header}}</div>
+                        </md-card-header-text>
+                    </md-card-header>
+                    <md-card-content>
+                        <p class="md-subheading custom-subheading" >Introduction</p>
+                        <md-field v-html="layoutItems[2].intro"/>
+                        <!--  <img style="height: 144px; padding-right: 100px;" src="https://storage.ning.com/topology/rest/1.0/file/get/2808326258?profile=original"></img>  -->
+                        <p class="md-subheading custom-subheading">How it works in MS Excel</p>
+                        <md-field v-html="layoutItems[2].excelFunc"/>
+                        <p class="md-subheading custom-subheading">How Pandas help</p>
+                        <md-field v-html="layoutItems[2].pandaFunc"/>
+                    </md-card-content>
+                </md-card>
+            </div>
+            <div id="cardGroupCreator" class="md-layout-item md-size-100">
+                <md-card>
+                    <md-card-header>
+                        <md-card-header-text>
+                            <div class="md-title section-topic">{{layoutItems[1].header}}</div>
+                            <div class="md-subhead">{{layoutItems[1].subHeader}}</div>
+                        </md-card-header-text>
+                            <md-card-media v-if="answer.isComplete === null || answer.isComplete === false">
+                             {{answer.jsonFeedback.errors}}
+                                <md-button class="md-raised" target="_blank" v-bind:href="'https://stackoverflow.com/search?q='">Search StackOverlow</md-button>
+                            </md-card-media>
+                            <md-card-media>
+                                <md-button class="md-raised md-primary" v-on:click="postContents">Submit</md-button>
+                            </md-card-media>
+                    </md-card-header>
+                    <md-card-content>
+                        <md-field>
+                            <codemirror class="editableTextarea" v-model="layoutItems[1].content" :options="cmOptions"></codemirror>
+                        </md-field>
+                    </md-card-content>
+                </md-card>
+            </div>
+            <div  class="md-layout-item md-size-100" style="display: flex;">
+                <div  class="md-layout-item md-size-60">
+                    <md-card>
+                        <md-card-header>
+                            <md-card-header-text>
+                                <div class="md-title section-topic">Output</div>
+                                <div class="md-subhead">Test results</div>
+                            </md-card-header-text>
+                        </md-card-header>
+                        <md-card-content>
+                            <md-field>
+                                <md-tabs class="md-primary">
+                                    <md-tab id="tab-htmlResults" md-label="HTML results">
+                                        <div v-html="answer.htmlFeedback"></div>
+                                    </md-tab>
+                                    <md-tab id="tab-jsonResults" md-label="JSON results">
+                                        <md-textarea v-model="answer.jsonFeedback" readonly></md-textarea>
+                                    </md-tab>
+                                    <md-tab id="tab-textResults" md-label="Text results">
+                                        <md-textarea v-model="answer.textFeedback" readonly></md-textarea>
+                                    </md-tab>
+                                </md-tabs>
+                            </md-field>
+                        </md-card-content>
+                    </md-card>
+                </div>
+
+                 <div class="md-layout-item md-size-40">
+                    <md-card style="margin-left: 0;">
+                        <md-card-header>
+                            <md-card-header-text>
+                                <div class="md-title section-topic">{{layoutItems[0].header}}</div>
+                                <div class="md-subhead">{{layoutItems[0].subHeader}}</div>
+                            </md-card-header-text>
+                        </md-card-header>
+                        <md-card-content>
+                            <md-field>
+                                <codemirror class="editableTextarea" v-model="layoutItems[0].content" :options="cmReadOnly"></codemirror>
+                            </md-field>
+                        </md-card-content>
+                    </md-card>
+                </div>
+             </div>
+             <div id="cardGroupCreator" class="md-layout-item md-size-100">
+                <md-card>
+                        <md-card-header>
+                            <md-card-header-text>
+                                <div class="md-title section-topic">You might like these articles:</div>
+                                <div class="md-subhead">{{layoutItems[0].subHeader}}</div>
+                            </md-card-header-text>
+                        </md-card-header>
+                         <md-card-content>
+                            <md-field>
+                                <ul>
+                                    <li>
+                                        <a style='cursor:pointer' href=" https://jakevdp.github.io/PythonDataScienceHandbook/03.04-missing-values.html">Handling Missing Data</a>
+                                    </li>
+                                </ul>
+                            </md-field>
+                        </md-card-content>
+                 </md-card>
+             <div>
+        </div>
+        `
+    })
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+            questions:[
+                {name:"Practise 1 ", layoutItems: [
+                {header:"Tests",
+                subHeader:'', content:">>> solution()\n{'item': ['Apple ', 'Peach', 'Lemon', 'Pineapple', 'Watermelon', 'Starfruit'], 'price': [0.2, 0.4, 0.3, 2.0, 3.0, 0.3], 'quantity': [6, 25, 8, 14, 5, 14]}"},
+                {header:"Editable Code Block", subHeader:"Solve questions written in the code comments", content:"# Practise 1\nimport pandas as pd\n\ndef solution():\n\t# Start Coding from here\n\t# TODO: Read csv file ('https://excelkiller-data.s3.amazonaws.com/Fruits1.csv') and save it into DataFrame 'df'\n\tdf = None\n\t# End Coding from here\n\n\t#Return created DataFrame\n\tdict_df= df.to_dict()\n\treturn {'item': list(dict_df['Item'].values()), 'price': list(dict_df['Price per item, SG$'].values()), 'quantity': list(dict_df['Quantity'].values())}"},
+                {header:"Reading data using pandas", subHeader:'',
+                intro:"<div>First of all we have to learn how to read data using Python. Let’s consider two most commonly used data formats - xls and csv. <br/><br/><b>CSV files</b> are file formats that contain plain text values separated by commas, It is a very widespread and popular file format for storing and reading data because it is simple and it’s compatible with most platforms. But CSV is only capable of storing a single sheet in a file, without any formatting and formulas in comparison with XLSX format. </div>",
+                excelFunc: "<div>Reading xlsx files with Excel - isn't a big deal, you just have to open your file with data. <br/>If you want to work with CSV files - you have to open a file and separate data using “text to columns” function. But depending on your regional settings it might mess up the separator (semicolon instead of comma) and eliminate leading + or 0 (which messes up phone numbers and zip codes).</div>",
+                pandaFunc: "<div>In Pandas we have two functions to read csv and excel file:<ul style='line-height: 1.8;'><li style='padding:0; margin:0'><b>.read_excel()</b> - Used to read an Excel file into a pandas DataFrame. Support both xls and xlsx file extensions from a local filesystem or URL. Support an option to read a single sheet or a list of sheets: </li><ul><li>Read file 'File_1.xlsx' that lies in folder where you are working: <br/><b>.read_excel('File_1.xlsx')</b></li><li>Read file that lies in another folder, path to the file file://localhost/path/to/File_1.xlsx: <br/><b>.read_excel(‘file://localhost/path/to/File_1.xlsx’)</b></li><li>Read one of worksheets (not the first): <br/><b>.read_excel(‘File_1.xlsx’, sheet_name = 1)</b></li></ul><li><b>.read_csv()</b> - Used to read a comma-separated values (csv) file into DataFrame.</li></ul></div>"
+                }], status:" "},
+                {name:"Practise 2 ", layoutItems: [
+                {header:"Tests",
+                subHeader:'', content:">>> solution()\n{'item': [0, 1, 2, 3, 4, 5], 'quantity': [0, 1, 2, 3, 4, 5]}"},
+                {header:"Editable Code Block", subHeader:'Solve questions written in the code comments', content:"# Practise 2\nimport pandas as pd\n\ndef solution():\n\t#read the csv ('https://excelkiller-data.s3.amazonaws.com/Fruits1.csv') and save data in DataFrame df\n\tdf = pd.read_csv('https://excelkiller-data.s3.amazonaws.com/Fruits1.csv')\n\n\t# Start Coding from here\n\t# TODO: Select items and their quantity from df and save it into new DataFrame - 'df2'\n\t#Hint: If you want to check exact column names use .columns function\n\tdf2 = None\n\t# End Coding from here\n\n\t#Return new DataFrame\n\tdict_df = df2.to_dict()\n\treturn {'item': list(dict_df['Item']), 'quantity': list(dict_df['Quantity'])}"},
+                {header:"Selection of columns and rows", subHeader:'',
+                intro:"<div>In real life cases you may not need the whole set of data to analyse, but you don’t want to delete the rest of the data as you may need it further. Pandas allows select only specific rows and save it in new DataFrame to work only under it. </div>",
+                excelFunc: "<div>You have to create separate worksheet and 'Copy-paste' data.</div>",
+                pandaFunc: "<div>Let’s say you want to print the list of items and their prices only.<br/>You should use this syntax:<p class='command'>df[['Item', Price per item, SG$ ']]</p><br/>If you don’t remember the exact name of the column, you can see the list of column names:<p class='command'>df.columns</p><br/>If you want to see content from separate row use the following function:<p class='command'># Access a group of rows and columns by label(s) or a boolean array<br/>.loc[1]</p></div>"
+                }], status:" "},
+                {name:"Practise 3 ", layoutItems: [
+                {header:"Tests",
+                subHeader:'', content:">>> solution()\n{'item': ['Apple ', 'Peach', 'Lemon', 'Pineapple', 'Watermelon', 'Starfruit', 'Passion Fruit'], 'price': [0.2, 0.4, 0.3, 2.0, 3.0, 0.3, 0.2], 'quantity': [6, 25, 8, 14, 5, 14, 13], 'taste': ['Sweet', 'Sweet', 'Sour', 'Sweet', 'Sweet', 'Sour', 'Sour']}"},
+                {header:"Editable Code Block", subHeader:'Solve questions written in the code comments', content:"# Practise 3\nimport pandas as pd\n\ndef solution():\n\t#read the csv ('https://excelkiller-data.s3.amazonaws.com/Fruits1.csv') and save data in DataFrame df\n\tdf = pd.read_csv('https://excelkiller-data.s3.amazonaws.com/Fruits1.csv')\n\n\t# Start Coding from here\n\t# TODO: Add new fruit and assign new parameter 'Taste' to the whole table\n\t#Parameters: Name - Passion Fruit, Price - 0.2 , Quantity - 13\n\t# STEP 1: Add new row using the parameters given above\n\tdf2 = None\n\t#A list of tastes\n\ttaste = ['Sweet', 'Sweet', 'Sour','Sweet','Sweet','Sour','Sour']\n\t#STEP 2:  Create a new column from the above declared list by assigning taste\n\tdf2['Taste'] = None\n\t# End Coding from here\n\n\t#Return new DataFrame\n\tdf_dict = df2.to_dict()\n\treturn {'item': list(df_dict['Item'].values()), 'price': list(df_dict['Price per item, SG$'].values()), 'quantity': list(df_dict['Quantity'].values()), 'taste': list(df_dict['Taste'].values())}"},
+                {header:"Adding new columns and rows", subHeader:'',
+                intro:"<div>Sometimes you may need to create new rows to add new data or merge two data sources (two tables) with the same type of Data. Or you may need to introduce a  new parameter that derived from others or assigned manually, so you need to know how to create new column.</div>",
+                excelFunc:"As we all know, this can be done easily in Excel by few clicks.",
+                pandaFunc: "<div>There are a lot of ways to add new rows, one of them - using append function that also is useful for DataFrame concatenation:  <ul style='line-height: 1.8;'><li style='padding:0; margin:0'><b>.append()</b> - Append rows of other to the end of caller, returning a new object.Variable for append is a dictionary with values of each column:</li><p class='command'>.append({‘Item’: ‘Name of the item’, 'Price per item, SG$' : X , 'Quantity': Y})</p></ul>If you want to create new column use the following syntaxis:<p class='command'>df[‘column name’]= data</p></div>"
+                }], status:""},
+
+                {name:"Practise 4 ", layoutItems: [
+                {header:"Tests",
+                subHeader:'', content:">>> solution()\n{'Price per item, SG$': {'Sour': 0.6, 'Sweet': 5.6}, 'Quantity': {'Sour': 22, 'Sweet': 50}}"},
+                {header:"Editable Code Block", subHeader:"Solve questions written in the code comments", content:"# Practise 4\nimport pandas as pd\n\ndef solution():\n\t#read the csv ('https://excelkiller-data.s3.amazonaws.com/Fruits1.csv') and save data in DataFrame df\n\tdf = pd.read_csv('https://excelkiller-data.s3.amazonaws.com/Fruits1.csv')\n\n\t# Start Coding from here\n\ttaste = ['Sweet', 'Sweet', 'Sour','Sweet','Sweet','Sour']\n\tdf['Taste'] = taste\n\t# TODO: Group by 'Taste' parameter and find a sum of other parameter\n\tdf_grouped = None\n\t# End Coding from here\n\n\t#Return result \n\treturn df_grouped.to_dict()"},
+                {header:"Basic grouping of data", subHeader:'',
+                intro:"<div>It is exactly the right time to see the advantages of using Pandas instead of Excel. Pandas allows to do basic analysis significantly faster than excel. For example - you need to find total/average meaning of values for items with common features. </div>",
+                excelFunc: "There are a lot of ways to group data in Excel, one of the most widely used - Pivot table. ",
+                pandaFunc: "<div>Groupby() - invaluable function that makes our lives easier:<ul style='line-height: 1.8;'><li style='padding:0; margin:0'><b>.groupby()</b> -  is used to split the data into groups based on some criteria.Pandas objects can be split on any of their axes. The abstract definition of grouping is to provide a mapping of labels to group names. Handy to  use it with aggregation function, for example: </li><ul><li>.sum()</li><li>.mean()</li><li>.min()</li><li>.max()</li><li>and etc.</li></ul></ul></div>"
+                }], status:" "}
+            ]
+        }
+        },
+         methods: {
+            toggleQuestionStatus (response) {
+            console.log(response)
+                const {data, questionName} = response
+                if (data.htmlFeedback) {
+                    const searchText = data.htmlFeedback
+                    searchText.search(/b2d8b2/) !== -1 ?
+                        searchText.search(/#ff9999/) == -1 ?
+                        this.questions.find(item => item.name === questionName).status = " ✅️"
+                        :
+                        this.questions.find(item => item.name === questionName).status = " 🔴"
+                    :
+                    this.questions.find(item => item.name === questionName).status = " ❌"
+                }
+            }
+        }
+      })
+    </script>
+    <style lang="scss" scoped>
+    .md-field.md-theme-default::after {
+        background-color: #fff;
+    }
+    .md-tabs.md-theme-default.md-primary .md-tabs-navigation .md-button.md-active {
+        color: #fff;
+        color: var(--md-theme-default-text-primary-on-primary, #FCD116);
+    }
+    .md-tabs-navigation .md-button {
+        height: 20px;
+    }
+    body {
+        background-color: #506987;
+    }
+    .md-card {
+        width: 90%;
+        margin: 20px;
+        display: inline-block;
+        vertical-align: top;
+        min-height:200px
+    }
+    .section-topic {
+        color: rgb(67, 114, 170);
+    }
+    .md-card-content {
+        padding-bottom: 16px !important;
+    }
+    button {
+        display:block;
+        margin: 20px 60px 20px 60px;
+        width:200px !important;
+    }
+    #cardGroupCreator {
+        display:flex;
+        flex-direction:column;
+        padding-right: 0px
+    }
+    #cardGroupPreview .md-card {
+        width: 90%;
+    }
+    #cardGroupPreview{
+        padding-left: 0px
+    }
+    #cardGroupPreview .md-tab{
+        height:100%
+    }
+    .command {
+        color: #3A3A38;
+        background-color: #EDEDED;
+        padding: 6px 18px;
+        font-size: 13px;
+        text-align: left;
+        margin: 10px 0;
+        width: max-content;
+    }
+    textarea {
+        font-size: 1rem !important;
+        min-height: 175px !important
+    }
+    .md-tabs{
+        width:100%;
+    }
+    .md-tab{
+        overflow-x: auto;
+    }
+    .md-tab::-webkit-scrollbar {
+    width: 0px;
+    }
+    html {
+        width:100%;
+        margin:auto;
+        mix-blend-mode: darken
+    }
+    .md-card {
+        width: 96%;
+    }
+    h1{
+        padding:20px;
+        margin:auto;
+        text-align: center;
+        color: #fff !important;
+    }
+    .md-tabs.md-theme-default.md-primary .md-tabs-navigation {
+        background-color: #448aff;
+        background-color: var(--md-theme-default-primary-on-background,
+        #26466D);
+    }
+    .md-content.md-theme-default {
+        background-color: #f5f5f5;
+    }
+    .md-content{
+        min-height:300px
+    }
+    .md-tabs-container, .md-tabs-container .md-tab textarea, .md-tabs-content{
+        height:100% !important
+    }
+    .md-field{
+        margin:0px;
+        padding:0px
+    }
+    .md-tabs-navigation{
+        justify-content:center !important
+    }
+    .md-card-media{
+        width:400px !important
+    }
+    .custom-subheading {
+        padding-bottom: 2px;
+        color: #236B8E;"
+    }
+    .md-field {
+        margin-bottom: 10px;
+    }
+    .md-card {
+        min-height: 0;
+    }
+    br {
+        margin: 0;
+    }
+    #title {
+        margin-left: 27px;
+        position: absolute;
+        font-weight: 200;
+        color: #fff;
+    }
+    .md-button{
+        margin:10px !important
+    }
+    .cm-s-default{
+        height:100%
+    }
+    .md-card-header{
+        padding:0 16px 16px 16px
+    }
+    </style>
+</html>

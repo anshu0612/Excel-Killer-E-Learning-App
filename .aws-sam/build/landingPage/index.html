@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<title>Excel Killer</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:description" content="Get rid of the hassle of using Excel because there is a better way to thrive using Pandas" />
+<meta property="og:image" content="https://pbs.twimg.com/media/BX9nCP6CAAAqxR6?format=png&name=small" />
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css" />
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans' />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147552064-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-147552064-1');
+  </script>
+
+  <script>
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+</head>
+<style>
+  html,
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: "Open Sans", sans-serif
+  }
+
+  .w3-theme-d2 {
+    background-color: #506987 !important;
+  }
+
+  .w3-theme-d4 {
+    background-color: #26466D !important;
+  }
+
+  .like {
+    float: right;
+  }
+
+  .share-btn {
+    width: 25px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+  .share-content {
+
+  }
+
+  .learn {
+    background-color: #ffbf00 !important;
+    color: #000 !important;
+  }
+</style>
+
+<body class="w3-theme-l5">
+
+  <!-- Navbar -->
+  <div class="w3-top fb-custom-share">
+    <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
+      <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4">Excel Killer</a>
+    </div>
+  </div>
+  <!-- Page Container -->
+  <div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
+    <!-- The Grid -->
+    <div class="w3-row">
+      <!-- Left Column -->
+      <div class="w3-col m3">
+        <br>
+
+        <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
+          <p><strong>Hey!</strong></p>
+          <p>Glad you are here 😃 !</p>
+          <p>Excel Killer is here to rescue you from the hassle of using Excel because there is a much better way to thrive using Pandas!!! </p>
+          <p>Let's learn Pandas! 🙌 </p>
+        </div>
+        <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
+            <p class="share-content">Are you having fun learning Pandas? Share on </p>
+            <img class="share-btn" style="margin-right: 10px" src="https://facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png" alt="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/'),'facebook-share-dialog','width=626,height=436'); return false;"/>
+            <img class="share-btn" src="https://www.dignitydreams.com/wp-content/uploads/2017/08/twitter-icon-basic-round-social-iconset-s-icons-0.png" alt="Share on Twitter" onclick="javascript:window.open('https://twitter.com/share?text=Excel Killer is here to rescue you from the hassle of using Excel because there is a much better way to thrive using Pandas&amp;url=https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/','Twitter-dialog','width=626,height=436'); return false;"/>
+<!--            <img class="share-btn" src="https://carlisletheacarlisletheatre.org/images/linkedin-logo-png-circle-2.jpg" alt="Share on Linkedin" onclick="javascript:window.open('https://www.linkedin.com/sharing/share-offsite/?url=https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/'); return false;"/>-->
+        </div>
+      </div>
+
+      <!-- Middle Column -->
+      <div class="w3-col m7">
+
+        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+<!--          <span class="w3-right w3-opacity">72/79 successfully solved</span>-->
+          <h4>Basics of Pandas</h4>
+          <hr class="w3-clear">
+          <p>1. Reading data using Pandas  <span class="w3-right w3-opacity">{{activity_counts.basics[1].correct}}/{{activity_counts.basics[1].correct+activity_counts.basics[1].incorrect}} successfully solved</span></p>
+          <p>2. Selecting columns and rows using Pandas <span class="w3-right w3-opacity">{{activity_counts.basics[2].correct}}/{{activity_counts.basics[2].correct+activity_counts.basics[2].incorrect}} successfully solved</span></p>
+          <p>3. Adding new columns and rows using Pandas <span class="w3-right w3-opacity">{{activity_counts.basics[3].correct}}/{{activity_counts.basics[3].correct+activity_counts.basics[3].incorrect}} successfully solved</span></p>
+          <p>4. Basic grouping of data using Pandas <span class="w3-right w3-opacity">{{activity_counts.basics[4].correct}}/{{activity_counts.basics[4].correct+activity_counts.basics[4].incorrect}} successfully solved</span></p>
+          <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/basics/">Let's Learn and Practice</a>
+          <form method="post">
+            <input type="hidden" value="basics" name="act"/>
+            <button class="w3-button w3-theme-d1 w3-margin-bottom like" name="forwardBtn" type="submit"><i class="fa fa-thumbs-up"></i> {{like_count.basics}} Likes</button>
+          </form>
+        </div>
+
+        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+<!--          <span class="w3-right w3-opacity">73/80 successfully solved</span>-->
+          <h4>Understanding the data</h4>
+          <hr class="w3-clear">
+          <p>1. Previewing data using Pandas <span class="w3-right w3-opacity">{{activity_counts.understanding[1].correct}}/{{activity_counts.understanding[1].correct+activity_counts.understanding[1].incorrect}} successfully solved</span></p>
+          <p>2. Finding missing and unique values using Pandas  <span class="w3-right w3-opacity">{{activity_counts.understanding[2].correct}}/{{activity_counts.understanding[2].correct+activity_counts.understanding[2].incorrect}} successfully solved</span></p>
+          <p>3. Counting values using Pandas  <span class="w3-right w3-opacity">{{activity_counts.understanding[3].correct}}/{{activity_counts.understanding[3].correct+activity_counts.understanding[3].incorrect}} successfully solved</span></p>
+          <p>4. Applying basic statistics using Pandas  <span class="w3-right w3-opacity">{{activity_counts.understanding[4].correct}}/{{activity_counts.understanding[4].correct+activity_counts.understanding[4].incorrect}} successfully solved</span></p>
+<!--          <p>Learn how to preview and get insights into data and apply statistics using Pandas.</p>-->
+          <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/understanding/">Let's Learn and Practice</a>
+          <form method="post">
+            <input type="hidden" value="understanding" name="act"/>
+            <button class="w3-button w3-theme-d1 w3-margin-bottom like" name="forwardBtn" type="submit"><i class="fa fa-thumbs-up"></i> {{like_count.understanding}} Likes</button>
+          </form>
+        </div>
+
+        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+<!--          <span class="w3-right w3-opacity">88/100 successfully solved</span>-->
+          <h4>Cleaning the data using Pandas</h4>
+          <hr class="w3-clear">
+          <p>1. Handling unwanted values <span class="w3-right w3-opacity">{{activity_counts.cleaning[1].correct}}/{{activity_counts.cleaning[1].correct+activity_counts.cleaning[1].incorrect}} successfully solved</span></p>
+          <p>2. Creating subsets of dataframes  <span class="w3-right w3-opacity">{{activity_counts.cleaning[2].correct}}/{{activity_counts.cleaning[2].correct+activity_counts.cleaning[2].incorrect}} successfully solved</span></p>
+          <p>3. Applying simple functions to dataframes <span class="w3-right w3-opacity">{{activity_counts.cleaning[3].correct}}/{{activity_counts.cleaning[3].correct+activity_counts.cleaning[2].incorrect}} successfully solved</span></p>
+<!--          <p>Learn how to handle unwanted values, create subsets of dataframes, apply basic functions to dataframes using Pandas.</p>-->
+          <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/cleaning/">Let's Learn and Practice</a>
+          <form method="post">
+            <input type="hidden" value="cleaning" name="act"/>
+            <button class="w3-button w3-theme-d1 w3-margin-bottom like" name="forwardBtn" type="submit"><i class="fa fa-thumbs-up"></i> {{like_count.cleaning}} Likes</button>
+          </form>
+        </div>
+
+        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+<!--          <span class="w3-right w3-opacity">10/40 successfully solved</span>-->
+          <h4>Visualizing the data</h4>
+          <hr class="w3-clear">
+<!--          <p>Learn how to create and get insights into graphs using Matplotlib. Further, you get to learn subplotting and data-to-ink ratio.</p>-->
+          <p>1. Creating graphs using Matplotlib <span class="w3-right w3-opacity">{{activity_counts.visualize[1].correct}}/{{activity_counts.visualize[1].correct+activity_counts.visualize[1].incorrect}} successfully solved</span></p>
+          <p>2. Helping viewer understanding the graph  <span class="w3-right w3-opacity">{{activity_counts.visualize[2].correct}}/{{activity_counts.visualize[2].correct+activity_counts.visualize[2].incorrect}} successfully solved</span></p>
+          <p>3. Subplotting and data-to-ink ratio <span class="w3-right w3-opacity">{{activity_counts.visualize[3].correct}}/{{activity_counts.visualize[3].correct+activity_counts.visualize[3].incorrect}} successfully solved</span></p>
+          <a target="_blank" class="w3-button w3-theme-d1 w3-margin-bottom learn" href="https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/visualize/">Let's Learn and Practice</a>
+          <form method="post">
+            <input type="hidden" value="visualize" name="act"/>
+            <button class="w3-button w3-theme-d1 w3-margin-bottom like" name="forwardBtn" type="submit"><i class="fa fa-thumbs-up"></i> {{like_count.visualize}} Likes</button>
+          </form>
+        </div>
+        <!-- End Middle Column -->
+      </div>
+      <!-- End Grid -->
+      <div class="w3-col m2" style="margin-top:16px">
+        <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
+          <p class="share-content">We would love to listen from you. Have any query, feedback, new topic in mind ...email us.  </p>
+          <a href="mailto:singh.anshu0612@gmail.com"><img class="share-btn" style="margin-right: 10px" src="https://www.socialtalent.com/wp-content/uploads/2015/07/Gmail-Logo.png" alt="Email us"/></a>
+        </div>
+
+        <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
+          <p class="share-content">For the full experience, check Excel-killer through Achievements platform <a href="https://achievements-prod.firebaseapp.com/#/paths/-LqGWvEA3N_Q5VC7Qped" style="color:blue">here</a>. In achievements you can track your progress, as well as get your hands in extra content on how to understand python, tips & tricks of pandas and where to continue learning  </p>
+        </div>
+      </div>
+    </div>
+    <!-- End Page Container -->
+  </div>
+</body>
+
+</html>

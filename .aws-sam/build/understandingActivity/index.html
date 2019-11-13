@@ -1,0 +1,366 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147552064-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-147552064-1');
+        </script>
+        <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/theme/default.css">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.css" />
+    </head>
+    <body>
+        <div style="width: 100%; display: flex;">
+            <h3 id="title">Excel Killer</h3>
+            <h1 class="md-display-2">Understanding the data</h1>
+        </div>
+        <div id="app" style="background-color: #f5f5f5">
+            <md-tabs class="md-primary" >
+                <md-tab v-for="question in questions" :key=question.name v-bind:md-label=question.name+question.status>
+                    <doctest-activity v-bind:layout-things=question.layoutItems v-bind:question-name=question.name  @questionhandler="toggleQuestionStatus"/>
+                </md-tab>
+            </md-tabs>
+            </div>
+        </div>
+    </body>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vue-material@beta"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/python/python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-codemirror@4.0.6/dist/vue-codemirror.min.js"></script>
+    <title>Excel Killer</title>
+    <script>
+    Vue.use(VueMaterial.default)
+    Vue.use(window.VueCodemirror)
+    Vue.component('doctest-activity', {
+        props: ['layoutThings', 'questionName'],
+        data: function () {
+            return {
+            answer:{jsonFeedback:'',htmlFeedback:'',textFeedback:'',isComplete: ''},
+            layoutItems: this.layoutThings,
+            cmOptions: {
+              mode: 'python',
+              lineNumbers: true
+            },
+            cmReadOnly: {
+              lineNumbers: true,
+              mode:  "python",
+              readOnly: true
+            }
+        }
+        },
+        methods: {
+            postContents: function () {
+            // comment: leaving the gatewayUrl empty - API will post back to itself
+            const gatewayUrl = '';
+            this.$set(this, 'answer', {jsonFeedback:'',htmlFeedback:'',textFeedback:'',isComplete:false});
+            fetch(gatewayUrl, {
+        method: "POST",
+        headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({shown:{0:this.layoutItems[0].content},editable:{0:this.layoutItems[1].content}})
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            this.answer = JSON.parse(JSON.stringify(data))
+            this.answer.jsonFeedback = JSON.stringify(this.answer.jsonFeedback)
+            return this.$emit('questionhandler',{data, questionName:this.questionName})
+            })
+         }
+        },
+        template:
+        `<div class="md-layout  md-gutter">
+            <div id="cardGroupCreator" class="md-layout-item md-size-100">
+              <md-card>
+                    <md-card-header>
+                        <md-card-header-text>
+                        <br>
+                            <div class="md-title" style="color: #4372AA;">{{ layoutItems[2].header}}</div>
+                        </md-card-header-text>
+                    </md-card-header>
+                    <md-card-content>
+                        <p class="md-subheading custom-subheading" >Introduction</p>
+                        <md-field v-html="layoutItems[2].intro"/>
+                        <!--  <img style="height: 144px; padding-right: 100px;" src="https://storage.ning.com/topology/rest/1.0/file/get/2808326258?profile=original"></img>  -->
+                        <p class="md-subheading custom-subheading">How it works in MS Excel</p>
+                        <md-field v-html="layoutItems[2].excelFunc"/>
+                        <p class="md-subheading custom-subheading">How Pandas help</p>
+                        <md-field v-html="layoutItems[2].pandaFunc"/>
+                    </md-card-content>
+                </md-card>
+            </div>
+            <div id="cardGroupCreator" class="md-layout-item md-size-100">
+                <md-card>
+                    <md-card-header>
+                        <md-card-header-text>
+                            <div class="md-title section-topic">{{layoutItems[1].header}}</div>
+                            <div class="md-subhead">{{layoutItems[1].subHeader}}</div>
+                        </md-card-header-text>
+                            <md-card-media v-if="answer.isComplete === null || answer.isComplete === false">
+                             {{answer.jsonFeedback.errors}}
+                                <md-button class="md-raised" target="_blank" v-bind:href="'https://stackoverflow.com/search?q='">Search StackOverlow</md-button>
+                            </md-card-media>
+                            <md-card-media>
+                                <md-button class="md-raised md-primary" v-on:click="postContents">Submit</md-button>
+                            </md-card-media>
+                    </md-card-header>
+                    <md-card-content>
+                        <md-field>
+                            <codemirror class="editableTextarea" v-model="layoutItems[1].content" :options="cmOptions"></codemirror>
+                        </md-field>
+                    </md-card-content>
+                </md-card>
+            </div>
+            <div  class="md-layout-item md-size-100" style="display: flex;">
+                <div  class="md-layout-item md-size-60">
+                    <md-card>
+                        <md-card-header>
+                            <md-card-header-text>
+                                <div class="md-title section-topic">Output</div>
+                                <div class="md-subhead">Test results</div>
+                            </md-card-header-text>
+                        </md-card-header>
+                        <md-card-content>
+                            <md-field>
+                                <md-tabs class="md-primary">
+                                    <md-tab id="tab-htmlResults" md-label="HTML results">
+                                        <div v-html="answer.htmlFeedback"></div>
+                                    </md-tab>
+                                    <md-tab id="tab-jsonResults" md-label="JSON results">
+                                        <md-textarea v-model="answer.jsonFeedback" readonly></md-textarea>
+                                    </md-tab>
+                                    <md-tab id="tab-textResults" md-label="Text results">
+                                        <md-textarea v-model="answer.textFeedback" readonly></md-textarea>
+                                    </md-tab>
+                                </md-tabs>
+                            </md-field>
+                        </md-card-content>
+                    </md-card>
+                </div>
+
+                 <div class="md-layout-item md-size-40">
+                    <md-card style="margin-left: 0;">
+                        <md-card-header>
+                            <md-card-header-text>
+                                <div class="md-title section-topic">{{layoutItems[0].header}}</div>
+                                <div class="md-subhead">{{layoutItems[0].subHeader}}</div>
+                            </md-card-header-text>
+                        </md-card-header>
+                        <md-card-content>
+                            <md-field>
+                                <codemirror class="editableTextarea" v-model="layoutItems[0].content" :options="cmReadOnly"></codemirror>
+                            </md-field>
+                        </md-card-content>
+                    </md-card>
+                </div>
+             </div>
+        </div>
+        `
+    })
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+            questions:[
+                {name:"Practise 1 ", layoutItems: [
+                {header:"Tests",
+                subHeader:'', content:">>> solution()\n{'item': ['Apple ', 'Peach'], 'price': [0.2, 0.4], 'quantity': [6, 25]}"},
+                {header:"Editable Code Block", subHeader:"Solve questions written in the code comments", content:"# Practise 1\nimport pandas as pd\n\ndef solution():\n\tdf = pd.read_csv('https://excelkiller-data.s3.amazonaws.com/Fruits1.csv')\n\n\t# Start Coding from here\n\t# TODO: Store first 2 rows as a sample of dataframe in df\n\tdf = None\n\t# End Coding from here\n\tdf = df.to_dict()\n\treturn {'item': list(df['Item'].values()), 'price': list(df['Price per item, SG$'].values()), 'quantity': list(df['Quantity'].values())}"},
+                {header:"Data preview", subHeader:'',
+                intro:"When you start to work with data, you might need to get a quick understanding of the data. Sometimes, it’s handy not to print the whole dataframe and flood your screen with data. You can see a preview by using a few lines of code and print them.",
+                excelFunc: "You can't preview a part of the data using Excel",
+                pandaFunc: "<div>Pandas has a bunch of functions that shows a preview of the data, using the following functions you can print N rows from DataFrame: <ul style='line-height: 1.8;'><li style='padding:0; margin:0'> <p class='command'>.head(n = 6) </p>This function returns the first N (6 in this example) rows for the object based on position. By default head function returns 5 rows, which is usually a good amount</li><li style='padding:0; margin:0'> <p class='command'>.tail(n = 6)</p>This function returns last N rows from the object based on position</li><li style='padding:0; margin:0'> <p class='command'>.sample(n = 6)</p>Returns a random sample of items from an axis of an object.</li></ul></div>"}], status:" "},
+                {name:"Practise 2 ", layoutItems: [
+                {header:"Tests",
+                subHeader:'', content:">>> solution()\n[{'Item': 0, 'Price per item, SG$': 1, 'Quantity': 1}, ['Apple ', 'Peach', 'Lemon', 'Pineapple', 'Watermelon', 'Starfruit']]"},
+                {header:"Editable Code Block", subHeader:"Solve questions written in the code comments", content:"# Practise 2\nimport pandas as pd\n\ndef solution():\n\tdf = pd.read_csv('https://excelkiller-data.s3.amazonaws.com/Fruits.csv')\n\n\t# Start Coding from here\n\t# TODO: Find and return quantity of empty cells in DataFrame and unique values in 'Items' column.\n\t# STEP 1: Save quantity of empty cells in new variable 'empty_cells'\n\tempty_cells = None\n\t# STEP 2: Save list of unique values from column 'Item' into list named 'unique_items'\n\tunique_items = None\n\t# End Coding from here\n\n\treturn [empty_cells.to_dict(), list(unique_items)]"},
+                {header:"Looking at the data", subHeader:'',
+                intro:"We need to start getting more in-depth with Pandas. Next step of data preview is - finding missed and unique data.",
+                excelFunc: "One of the ways to detect missing values - use sort tool and see only missing values or check unique quantity. If you need to print list of unique values - use advanced filter or lookup function on interesting column. ",
+                pandaFunc: "<div>Let’s start looking at examples of how to detect missing or unique values - to have overview of diversity of data: <ul style='line-height: 1.8;'><li style='padding:0; margin:0'> <p class='command'>.isnull()</p>This function takes a scalar or array-like object and indicates whether values are missing. Pandas will recognize both empty cells and “NA” types as missing values. For example, if you want to find how many missing values in dataframe ‘df’ column ‘age’ is missing, you can check it with:<p class='command'>df['age'].isnull().sum()</p></li><li style='padding:0; margin:0'> <p class='command'>.unique</p> Return unique values of Series object. Can be applied to exact row or column. Similarly, for unique values in column ‘age’ in dataframe ‘df’:<p class='command'>df['age'].unique()</p></li></ul></div>"}], status:" "},
+                {name:"Practise 3 ", layoutItems: [
+                {header:"Tests",
+                subHeader:'', content:">>> solution()\n[1, 1, 1, 2]"},
+                {header:"Editable Code Block", subHeader:"Solve questions written in the code comments", content:"# Practise 3\nimport pandas as pd\n\ndef solution():\n\tdf = pd.read_csv('https://excelkiller-data.s3.amazonaws.com/Fruits.csv')\n\n\t# Start Coding from here\n\t# TODO: Count values in 'Price per item, SG$' column and store it in ascending order in 'val' variable.\n\t# Note that value_counts function works with series (particularly with DataFrame columns)\n\tval = None\n\t# End Coding from here\n\n\treturn list(val.to_dict().values())"},
+                {header:"Count values", subHeader:'',
+                intro:"During first look on data you may need to quickly get the number of times each parameter appears in DataFrame. The Pandas library is equipped with a number of useful functions for understanding of what our data contains and value_counts is of one of them. ",
+                excelFunc: "You have to create a Pivot table and choose parameter that you want to be counted.",
+                pandaFunc: "<div>The value_counts() method returns a Series containing the counts of unique values. This means, for any column in a dataframe, this method returns the count of unique entries in that column : <ul style='line-height: 1.8;'><li style='padding:0; margin:0'> <p class='command'>.value_counts() </p>Return a Series containing counts of unique values. The following parameters of the function are most useful for understanding of data:<ul><li><b>normalize=True:</b>by setting this parameter True, the returned object will contain the relative frequencies of the unique values. The normalize parameter is set to False by default.\n</li><li><b>ascending=True:</b>The series returned by value_counts() is in descending order by default. We can reverse the case by setting the ascending parameter to True</li><li><b>dropna=False:</b>the count of null values is excluded from the result. But, the same can be displayed easily by setting the dropna parameter to False</li></ul></li></ul></div>"}], status:" "},
+
+
+                {name:"Practise 4 ", layoutItems: [
+                {header:"Tests",
+                subHeader:'', content:">>> solution()\n[3.0, 0.2, 2.8]"},
+                {header:"Editable Code Block", subHeader:"Solve questions written in the code comments", content:"# Practise 4\nimport pandas as pd\n\ndef solution():\n\tdf = pd.read_csv('https://excelkiller-data.s3.amazonaws.com/Fruits.csv')\n\n\t# Start Coding from here\n\t# TODO: Find difference between max and min price of Items: \n\t# STEP 1: Count max of column 'Price per item, SG$' and store it in variable 'max_price'\n\tmax_price = None\n\t# STEP 2: Count min of column 'Price per item, SG$' and store it in variable 'min_price'\n\tmin_price = None\n\t# STEP 3:  Find difference between maximum and minimum and store it in variable 'max_price_difference'\n\tmax_price_difference = None\n\t# End Coding from here\n\n\treturn [max_price, min_price, max_price_difference]"},
+                {header:"Basic Statistics", subHeader:'',
+                intro:"Once you understand your data, you probably want to run some basic statistics and calculations on your pandas DataFrame. It is really easy. Let’s learn some of the most common and basic statistics that you may want to use. ",
+                excelFunc: "Excel has its own functions for finding maximum, minimum, average meanings.",
+                pandaFunc: "<div>To sum all of the values in a particular column of a DataFrame, you can do the following: <ul style='line-height: 1.8;'><li style='padding:0; margin:0'> <p class='command'>df[‘column_name’].sum() </p>This function skips the missing values by default. However, you can define to keep missing values by passing a skipna argument with False: <ul><li><p class='command'>df[‘column_name’].sum(skipna=False)</p></li></ul></li></ul>  To count arithmetic mean: <ul style='line-height: 1.8;'><li style='padding:0; margin:0'> <p class='command'>df[‘column_name’].mean() </p>Use this syntax to count mean for specified column.</li><li style='padding:0; margin:0'> <p class='command'>df.mean(axis=0)</p>Passing the argument of axis=0 returns the mean of every single column in the DataFrame</li> <li style='padding:0; margin:0'> <p class='command'>df.mean(axis=1) </p> Passing the argument of axis=1 will return the mean of every single row in the DataFrame </li> </ul>  To find maximum, minimum and median values: <ul style='line-height: 1.8;'><li style='padding:0; margin:0'> <p class='command'>df[‘column_name’].max() </p></li><li style='padding:0; margin:0'> <p class='command'>df[‘column_name’].min()</p></li> <li style='padding:0; margin:0'> <p class='command'>df[‘column_name’].median() </p></li> </ul></div>"}], status:" "}
+            ]
+        }
+        },
+         methods: {
+            toggleQuestionStatus (response) {
+            console.log(response)
+                const {data, questionName} = response
+                if (data.htmlFeedback) {
+                    const searchText = data.htmlFeedback
+                    searchText.search(/b2d8b2/) !== -1 ?
+                        searchText.search(/#ff9999/) == -1 ?
+                        this.questions.find(item => item.name === questionName).status = " ✅️"
+                        :
+                        this.questions.find(item => item.name === questionName).status = " 🔴"
+                    :
+                    this.questions.find(item => item.name === questionName).status = " ❌"
+                }
+            }
+        }
+      })
+    </script>
+    <style lang="scss" scoped>
+    .md-field.md-theme-default::after {
+        background-color: #fff;
+    }
+    .md-tabs.md-theme-default.md-primary .md-tabs-navigation .md-button.md-active {
+        color: #fff;
+        color: var(--md-theme-default-text-primary-on-primary, #FCD116);
+    }
+    .md-tabs-navigation .md-button {
+        height: 20px;
+    }
+    body {
+        background-color: #506987;
+    }
+    .md-card {
+        width: 90%;
+        margin: 20px;
+        display: inline-block;
+        vertical-align: top;
+        min-height:200px
+    }
+    .section-topic {
+        color: rgb(67, 114, 170);
+    }
+    .md-card-content {
+        padding-bottom: 16px !important;
+    }
+    button {
+        display:block;
+        margin: 20px 60px 20px 60px;
+        width:200px !important;
+    }
+    #cardGroupCreator {
+        display:flex;
+        flex-direction:column;
+        padding-right: 0px
+    }
+    #cardGroupPreview .md-card {
+        width: 90%;
+    }
+    #cardGroupPreview{
+        padding-left: 0px
+    }
+    #cardGroupPreview .md-tab{
+        height:100%
+    }
+    .command {
+        color: #3A3A38;
+        background-color: #EDEDED;
+        padding: 6px 18px;
+        font-size: 13px;
+        text-align: left;
+        margin: 10px 0;
+        width: max-content;
+    }
+    textarea {
+        font-size: 1rem !important;
+        min-height: 175px !important
+    }
+    .md-tabs{
+        width:100%;
+    }
+    .md-tab{
+        overflow-x: auto;
+    }
+    .md-tab::-webkit-scrollbar {
+    width: 0px;
+    }
+    html {
+        width:100%;
+        margin:auto;
+        mix-blend-mode: darken
+    }
+    .md-card {
+        width: 96%;
+    }
+    h1{
+        padding:20px;
+        margin:auto;
+        text-align: center;
+        color: #fff !important;
+    }
+    .md-tabs.md-theme-default.md-primary .md-tabs-navigation {
+        background-color: #448aff;
+        background-color: var(--md-theme-default-primary-on-background,
+        #26466D);
+    }
+    .md-content.md-theme-default {
+        background-color: #f5f5f5;
+    }
+    .md-content{
+        min-height:300px
+    }
+    .md-tabs-container, .md-tabs-container .md-tab textarea, .md-tabs-content{
+        height:100% !important
+    }
+    .md-field{
+        margin:0px;
+        padding:0px
+    }
+    .md-tabs-navigation{
+        justify-content:center !important
+    }
+    .md-card-media{
+        width:400px !important
+    }
+    .custom-subheading {
+        padding-bottom: 2px;
+        color: #236B8E;"
+    }
+    .md-field {
+        margin-bottom: 10px;
+    }
+    .md-card {
+        min-height: 0;
+    }
+    br {
+        margin: 0;
+    }
+    .graph-1 {
+       height: 300px;
+        width: 300px
+    }
+    #title {
+        margin-left: 27px;
+        position: absolute;
+        font-weight: 200;
+        color: #fff;
+    }
+    .md-button{
+        margin:10px !important
+    }
+    .cm-s-default{
+        height:100%
+    }
+    .md-card-header{
+        padding:0 16px 16px 16px
+    }
+    </style>
+</html>

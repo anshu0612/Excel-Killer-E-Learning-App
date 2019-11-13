@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'Excel Killer
+
+  Template File
+
+  '
+Globals:
+  Function:
+    Timeout: 30
+Resources:
+  basicsActivity:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: basicsActivity
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.6
+      MemorySize: 1024
+      Events:
+        basicsPandas:
+          Type: Api
+          Properties:
+            Path: basics/
+            Method: ANY
+  understandingActivity:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: understandingActivity
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.6
+      MemorySize: 1024
+      Events:
+        understandingPandas:
+          Type: Api
+          Properties:
+            Path: understanding/
+            Method: ANY
+  cleaningActivity:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: cleaningActivity
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.6
+      MemorySize: 1024
+      Events:
+        cleaningPandas:
+          Type: Api
+          Properties:
+            Path: cleaning/
+            Method: ANY
+  visualizingActivity:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: visualizingActivity
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.6
+      MemorySize: 1024
+      Events:
+        visualizingPandas:
+          Type: Api
+          Properties:
+            Path: visualize/
+            Method: ANY
+  landingPage:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: landingPage
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.6
+      MemorySize: 1024
+      Events:
+        landingPageExcelKiller:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY

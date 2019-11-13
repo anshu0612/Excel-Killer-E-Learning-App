@@ -1,0 +1,458 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-147552064-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'UA-147552064-1');
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/theme/default.css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.css"/>
+</head>
+<body>
+<div style="width: 100%; display: flex;">
+    <h3 id="title">Excel Killer</h3>
+    <h1 class="md-display-2">Cleaning the data using Pandas</h1>
+</div>
+<div id="app" style="background-color: #f5f5f5">
+    <md-tabs class="md-primary">
+        <md-tab v-for="question in questions" :key=question.name v-bind:md-label=question.name+question.status>
+            <doctest-activity v-bind:layout-things=question.layoutItems v-bind:question-name=question.name
+                              @questionhandler="toggleQuestionStatus"/>
+        </md-tab>
+    </md-tabs>
+</div>
+</div>
+</body>
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/vue-material@beta"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.32.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/mode/python/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-codemirror@4.0.6/dist/vue-codemirror.min.js"></script>
+<title>Excel Killer</title>
+<script>
+    Vue.use(VueMaterial.default)
+    Vue.use(window.VueCodemirror)
+
+    Vue.component('doctest-activity', {
+        props: ['layoutThings', 'questionName'],
+        data: function () {
+            return {
+                answer: {jsonFeedback: '', htmlFeedback: '', textFeedback: '', isComplete: ''},
+                layoutItems: this.layoutThings,
+                cmOptions: {
+                    mode: 'python',
+                    lineNumbers: true
+                },
+                cmReadOnly: {
+                    lineNumbers: true,
+                    mode: "python",
+                    readOnly: true
+                }
+            }
+        },
+        methods: {
+            postContents: function () {
+                // comment: leaving the gatewayUrl empty - API will post back to itself
+                const gatewayUrl = '';
+                this.$set(this, 'answer', {jsonFeedback: '', htmlFeedback: '', textFeedback: '', isComplete: false});
+                fetch(gatewayUrl, {
+                    method: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        shown: {0: this.layoutItems[0].content},
+                        editable: {0: this.layoutItems[1].content}
+                    })
+                }).then(response => {
+                    return response.json()
+                }).then(data => {
+                    this.answer = JSON.parse(JSON.stringify(data))
+                    this.answer.jsonFeedback = JSON.stringify(this.answer.jsonFeedback)
+                    return this.$emit('questionhandler', {data, questionName: this.questionName})
+                })
+            }
+        },
+        template:
+            `<div class="md-layout  md-gutter">
+            <div id="cardGroupCreator" class="md-layout-item md-size-100">
+              <md-card>
+                    <md-card-header>
+                        <md-card-header-text>
+                        <br>
+                            <div class="md-title" style="color: #4372AA;">{{ layoutItems[2].header}}</div>
+                        </md-card-header-text>
+                    </md-card-header>
+                    <md-card-content>
+                        <p class="md-subheading custom-subheading" >Introduction</p>
+                        <md-field>
+                            {{layoutItems[2].intro}}
+                            <!--  <img style="height: 144px; padding-right: 100px;" src="https://storage.ning.com/topology/rest/1.0/file/get/2808326258?profile=original"></img>  -->
+                        </md-field>
+                        <p class="md-subheading custom-subheading">How it works in MS Excel</p>
+                        <md-field>
+                            {{layoutItems[2].excelFunc}}
+                        </md-field>
+                        <p class="md-subheading custom-subheading">How Pandas help</p>
+                        <md-field v-html="layoutItems[2].pandaFunc"/>
+                    </md-card-content>
+                </md-card>
+            </div>
+            <div id="cardGroupCreator" class="md-layout-item md-size-100">
+                <md-card>
+                    <md-card-header>
+                        <md-card-header-text>
+                            <div class="md-title section-topic">{{layoutItems[1].header}}</div>
+                            <div class="md-subhead">{{layoutItems[1].subHeader}}</div>
+                        </md-card-header-text>
+                            <md-card-media v-if="answer.isComplete === null || answer.isComplete === false">
+                             {{answer.jsonFeedback.errors}}
+                                <md-button class="md-raised" target="_blank" v-bind:href="'https://stackoverflow.com/search?q='">Search StackOverlow</md-button>
+                            </md-card-media>
+                            <md-card-media>
+                                <md-button class="md-raised md-primary" v-on:click="postContents">Submit</md-button>
+                            </md-card-media>
+                    </md-card-header>
+                    <md-card-content>
+                        <md-field>
+                            <codemirror class="editableTextarea" v-model="layoutItems[1].content" :options="cmOptions"></codemirror>
+                        </md-field>
+                    </md-card-content>
+                </md-card>
+            </div>
+            <div  class="md-layout-item md-size-100" style="display: flex;">
+                <div  class="md-layout-item md-size-60">
+                    <md-card>
+                        <md-card-header>
+                            <md-card-header-text>
+                                <div class="md-title section-topic">Output</div>
+                                <div class="md-subhead">Test results</div>
+                            </md-card-header-text>
+                        </md-card-header>
+                        <md-card-content>
+                            <md-field>
+                                <md-tabs class="md-primary">
+                                    <md-tab id="tab-htmlResults" md-label="HTML results">
+                                        <div v-html="answer.htmlFeedback"></div>
+                                    </md-tab>
+                                    <md-tab id="tab-jsonResults" md-label="JSON results">
+                                        <md-textarea v-model="answer.jsonFeedback" readonly></md-textarea>
+                                    </md-tab>
+                                    <md-tab id="tab-textResults" md-label="Text results">
+                                        <md-textarea v-model="answer.textFeedback" readonly></md-textarea>
+                                    </md-tab>
+                                </md-tabs>
+                            </md-field>
+                        </md-card-content>
+                    </md-card>
+                </div>
+
+                 <div class="md-layout-item md-size-40">
+                    <md-card style="margin-left: 0;">
+                        <md-card-header>
+                            <md-card-header-text>
+                                <div class="md-title section-topic">{{layoutItems[0].header}}</div>
+                                <div class="md-subhead">{{layoutItems[0].subHeader}}</div>
+                            </md-card-header-text>
+                        </md-card-header>
+                        <md-card-content>
+                            <md-field>
+                                <codemirror class="editableTextarea" v-model="layoutItems[0].content" :options="cmReadOnly"></codemirror>
+                            </md-field>
+                        </md-card-content>
+                    </md-card>
+                </div>
+             </div>
+             <div id="cardGroupCreator" class="md-layout-item md-size-100">
+                <md-card>
+                        <md-card-header>
+                            <md-card-header-text>
+                                <div class="md-title section-topic">You might like these articles:</div>
+                                <div class="md-subhead">{{layoutItems[0].subHeader}}</div>
+                            </md-card-header-text>
+                        </md-card-header>
+                         <md-card-content>
+                            <md-field>
+                                <ul>
+                                    <li>
+                                        <a style='cursor:pointer' href=" https://jakevdp.github.io/PythonDataScienceHandbook/03.04-missing-values.html">Handling Missing Data</a>
+                                    </li>
+                                </ul>
+                            </md-field>
+                        </md-card-content>
+                 </md-card>
+             <div>
+        </div>
+        `
+    })
+
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                questions: [
+                    {
+                        name: "Practise 1 ", layoutItems: [
+                            {
+                                header: "Tests",
+                                subHeader: '',
+                                content: ">>> solution()\n{'Matt': 10.0, 'Sylvia': 15.0, 'Javier': 20.0}"
+                            },
+                            {
+                                header: "Editable Code Block",
+                                subHeader: 'Solve questions written in the code comments',
+                                content: "# Practise 1\nimport pandas as pd\nfrom numpy import nan\n\ndef solution():\n\tdf = pd.DataFrame(data={'player': ['Matt', 'Sylvia', 'Javier', None], 'score': [10, nan, 20, 15]})\n\t# Start Coding from here\n\t# TODO: Drop rows where there isn't a player's name\n\t# TODO: Fill score columns missing value with column median\n\t# STEP 1: First count median here\n\n\t# STEP 2: Then apply fillna() command for the right column.\n\n\t# End Coding from here\n\t\n\t# Return the dictionary containing player name and score e.g: {'player1': 'score'}\n\treturn dict(zip(df['player'].values.tolist(), df['score'].values.tolist()))"
+                            },
+                            {
+                                header: "Handling Unwanted Values",
+                                subHeader: '',
+                                intro: "In real-life datasets you can often find data points that are either missing, or don’t represent an existing value. For example on a survey a person’s wrongfully added age could be listed as NaN (Not a Number), blank, 0 or 999. Let’s take a look at two different cases: Dropping rows with missing values and replacing the missing values.",
+                                excelFunc: "Overcoming these sort of errors in data often needs to be manually overwritten in Excel either by writing to single cells or deleting rows. Other option is to to create IF-functions that transform the values.",
+                                pandaFunc: "<div>In pandas we have two main functions designed for overcoming NaN-values: <ul style='line-height: 1.8;'> <li style='padding:0; margin:0'> <b>dropna()</b> - Used to dropping rows or columns with missing values <ul><li>Drop all columns with missing values using command <p class='command'>df = df.dropna(axis=’columns’)</p></li><li>Drop all rows with missing value on column gender, use command <p class='command'>df = df.dropna(axis=’index’, subset=[‘gender’])</p> </li></ul> </li> <li> <b>.fillna()</b> - Used to filling missing values on whole dataframe or given column<ul><li>Selecting rows that are over or equal to certain age value:<p class='command'>df = df.dropna(axis=’index’, subset=[‘gender’])</p></li><li>Replace missing values in column age with column’s median: <p class='command'> median = df[‘age’].median() <br/> df[‘age’] = df[‘age’].fillna(median)</p></li></ul></li></ul></div>"
+                            }], status: " "
+                    },
+
+                    {
+                        name: "Practise 2 ", layoutItems: [
+                            {
+                                header: "Tests",
+                                subHeader: '',
+                                content: ">>> solution()\n{'female': ['Sylvia'], 'under_age': ['Matt', 'Sylvia']}"
+                            },
+                            {
+                                header: "Editable Code Block",
+                                subHeader: 'Solve questions written in the code comments',
+                                content: "# Practise 2\nimport pandas as pd\nfrom numpy import nan\n\ndef solution():\n\tdf = pd.DataFrame(data={\n\t\t'player': ['Matt', 'Sylvia', 'Javier'],\n\t\t'gender': ['male', 'female', 'male'],\n\t\t'score': [10, 20, 15],\n\t\t'age': [15, 16, 20]\n\t})\n\n\t# Start Coding from here\n\t# Create dataframe of all the females to female_df using original df\n\tfemale_df = None\n\t# Create dataset of everyone under 20 year olds to underaged_df\n\tunderage_df = None\n\t# End Coding from here\n\n\t# Return the list of female and underage players\n\treturn {'female': female_df['player'].values.tolist(), 'under_age': underage_df['player'].values.tolist()}"
+                            },
+                            {
+                                header: "Creating Subsets of Dataframes",
+                                subHeader: '',
+                                intro: "When performing analysis on our data, we sometimes want to select only a subset of the whole data. This can mean selecting only rows with certain values on a column or using comparison to filter out values.",
+                                excelFunc: "In excel you can use AutoFilter from the Data-tab to perform similar operations and follow the provided graphical interface. However this is often slow if there’s a lot of data or filtering are complicated.",
+                                pandaFunc: "<div>In pandas we can easily create subsets by using relational operators. : <ul style='line-height: 1.8;'> <li style='padding:0; margin:0'> Selecting rows that are equal or inequal to certain value <ul><li>Select only rows where country is Finland: <p class='command'>df = df[df[‘country’’] == ‘Finland]</p></li></ul> </li><li style='padding:0; margin:0'> Selecting rows that are not equal to certain value: <ul><li>Select only rows where gender is not male and create it as new dataframe: <p class='command'>non_male_df = df[df[‘gender’] != ‘male’]</p></li></ul> </li><li style='padding:0; margin:0'> Selecting rows that are over or equal to certain age value: <ul><li><p class='command'>df = df[df[‘age’] >= 30]</p></li></ul> </li></ul></div>"
+                            }], status: " "
+                    },
+
+
+                    {
+                        name: "Practise 3 ", layoutItems: [
+                            {
+                                header: "Tests",
+                                subHeader: '',
+                                content: ">>> solution()\n62.33"
+                            },
+                            {
+                                header: "Editable Code Block",
+                                subHeader: 'Solve questions written in the code comments',
+                                content: "# Practise 3\nimport pandas as pd\nimport numpy as np\nfrom random import randint\n\ndef solution():\n\t# Do not remove the below line, it is used for testing your solution\n\tnp.random.seed(0)\n\n\tdf = pd.DataFrame(data= {\n\t\t'player': ['Matt', 'Sylvia', 'Javier'],\n\t\t'round1': [90, 80, 82],\n\t\t'round2': [76, 66,  75]\n\t})\n\tdef new_round(prev_score):\n\t\treturn prev_score - np.random.randint(1,20)\n\n\t# Let’s play a game, every player starts with 100 points and in round 1 loses random amount of points.\n\t# Start Coding from here\n\t#TODO: Apply the above given function and generate the scores for round 3, remember to use scores for round 2 for this.\n\tdf['round3'] = None\n\t#TODO: Compute the average of the round 3\n\tround3_avg = None\n\t# End coding here \n\n\treturn round(round3_avg,2)"
+                            },
+                            {
+                                header: "Applying Simple Functions to Dataframes", subHeader: '',
+                                intro: "To really utilize the advantages that programming in python gives you is defining your own custom function (or finding one online) and using it to alter your dataset. Pandas offers really simple and good performing way to achieve this.",
+                                excelFunc: "Most of the data manipulation tasks can be achieved in Excel using combined formulas or VBA macros. However this is often ineffective and slow if amount of data is big or the calculations are complex.",
+                                pandaFunc: "<div>Applying functions can be divided to two main ways: <ul style='line-height: 1.8;'> <li style='padding:0; margin:0'> Using ready made functions <ul><li>Counting average age whole dataset using numpy library’s average function: <p class='command'>from numpy import sum <br/> df[‘age’].apply(sum)</p></li></ul> </li><li style='padding:0; margin:0'> Using custom made lambda functions <ul><li>Giving average weight based on gender with our self made function: <p class='command'>def give_weight(gender):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if gender == ‘male’:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 70<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if gender == ‘female’:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 60<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 65<br>df[‘weight’] = df[‘gender’].apply(lambda gender: give_weight(gender)</p></li></ul> </li></ul></div>"
+                            }], status: ""
+                    }
+                ]
+            }
+        },
+        methods: {
+            toggleQuestionStatus(response) {
+                console.log(response)
+                const {data, questionName} = response
+                if (data.htmlFeedback) {
+                    const searchText = data.htmlFeedback
+                    searchText.search(/b2d8b2/) !== -1 ?
+                        searchText.search(/#ff9999/) == -1 ?
+                            this.questions.find(item => item.name === questionName).status = " ✅️"
+                            :
+                            this.questions.find(item => item.name === questionName).status = " 🔴"
+                        :
+                        this.questions.find(item => item.name === questionName).status = " ❌"
+                }
+            }
+        }
+    })
+</script>
+<style lang="scss" scoped>
+    .md-field.md-theme-default::after {
+        background-color: #fff;
+    }
+
+    .md-tabs.md-theme-default.md-primary .md-tabs-navigation .md-button.md-active {
+        color: #fff;
+        color: var(--md-theme-default-text-primary-on-primary, #FCD116);
+    }
+
+    .md-tabs-navigation .md-button {
+        height: 20px;
+    }
+
+    body {
+        background-color: #506987;
+    }
+
+    .md-card {
+        width: 90%;
+        margin: 20px;
+        display: inline-block;
+        vertical-align: top;
+        min-height: 200px
+    }
+
+    .section-topic {
+        color: rgb(67, 114, 170);
+    }
+
+    .md-card-content {
+        padding-bottom: 16px !important;
+    }
+
+    button {
+        display: block;
+        margin: 20px 60px 20px 60px;
+        width: 200px !important;
+    }
+
+    #cardGroupCreator {
+        display: flex;
+        flex-direction: column;
+        padding-right: 0px
+    }
+
+    #cardGroupPreview .md-card {
+        width: 90%;
+    }
+
+    #cardGroupPreview {
+        padding-left: 0px
+    }
+
+    #cardGroupPreview .md-tab {
+        height: 100%
+    }
+
+    .command {
+        color: #3A3A38;
+        background-color: #EDEDED;
+        padding: 6px 18px;
+        font-size: 13px;
+        text-align: left;
+        margin: 10px 0;
+        width: max-content;
+    }
+
+    textarea {
+        font-size: 1rem !important;
+        min-height: 175px !important
+    }
+
+    .md-tabs {
+        width: 100%;
+    }
+
+    .md-tab {
+        overflow-x: auto;
+    }
+
+    .md-tab::-webkit-scrollbar {
+        width: 0px;
+    }
+
+    html {
+        width: 100%;
+        margin: auto;
+        mix-blend-mode: darken
+    }
+
+    .md-card {
+        width: 96%;
+    }
+
+    h1 {
+        padding: 20px;
+        margin: auto;
+        text-align: center;
+        color: #fff !important;
+    }
+
+    .md-tabs.md-theme-default.md-primary .md-tabs-navigation {
+        background-color: #448aff;
+        background-color: var(--md-theme-default-primary-on-background,
+        #26466D);
+    }
+
+    .md-content.md-theme-default {
+        background-color: #f5f5f5;
+    }
+
+    .md-content {
+        min-height: 300px
+    }
+
+    .md-tabs-container, .md-tabs-container .md-tab textarea, .md-tabs-content {
+        height: 100% !important
+    }
+
+    .md-field {
+        margin: 0px;
+        padding: 0px
+    }
+
+    .md-tabs-navigation {
+        justify-content: center !important
+    }
+
+    .md-card-media {
+        width: 400px !important
+    }
+
+    .custom-subheading {
+        padding-bottom: 2px;
+        color: #236B8E;
+    "
+    }
+
+    .md-field {
+        margin-bottom: 10px;
+    }
+
+    .md-card {
+        min-height: 0;
+    }
+
+    br {
+        margin: 0;
+    }
+
+    #title {
+        margin-left: 27px;
+        position: absolute;
+        font-weight: 200;
+        color: #fff;
+    }
+
+    .md-button {
+        margin: 10px !important
+    }
+
+    .cm-s-default {
+        height: 100%
+    }
+
+    .md-card-header {
+        padding: 0 16px 16px 16px
+    }
+</style>
+</html>
