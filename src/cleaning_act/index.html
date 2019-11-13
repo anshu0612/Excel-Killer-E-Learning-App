@@ -20,7 +20,8 @@
 </head>
 <body>
 <div style="width: 100%; display: flex;">
-    <h3 id="title">Excel Killer</h3>
+<!--    <h3 id="title">Excel Killer</h3>-->
+    <a href="https://nvl81kvt84.execute-api.us-east-1.amazonaws.com/Prod/"><img id="title" class="logo" src="https://excel-killer-images.s3.amazonaws.com/logo.png" /></a>
     <h1 class="md-display-2">Cleaning the data using Pandas</h1>
 </div>
 <div id="app" style="background-color: #f5f5f5">
@@ -174,25 +175,6 @@
                     </md-card>
                 </div>
              </div>
-             <div id="cardGroupCreator" class="md-layout-item md-size-100">
-                <md-card>
-                        <md-card-header>
-                            <md-card-header-text>
-                                <div class="md-title section-topic">You might like these articles:</div>
-                                <div class="md-subhead">{{layoutItems[0].subHeader}}</div>
-                            </md-card-header-text>
-                        </md-card-header>
-                         <md-card-content>
-                            <md-field>
-                                <ul>
-                                    <li>
-                                        <a style='cursor:pointer' href=" https://jakevdp.github.io/PythonDataScienceHandbook/03.04-missing-values.html">Handling Missing Data</a>
-                                    </li>
-                                </ul>
-                            </md-field>
-                        </md-card-content>
-                 </md-card>
-             <div>
         </div>
         `
     })
@@ -324,6 +306,14 @@
         margin: 20px 60px 20px 60px;
         width: 200px !important;
     }
+    .md-tab {
+        overflow-x: hidden !important;
+    }
+    .logo {
+        height: 40px;
+        padding: 5px;
+        width: 120px
+    }
 
     #cardGroupCreator {
         display: flex;
@@ -352,7 +342,9 @@
         margin: 10px 0;
         width: max-content;
     }
-
+    .md-tabs {
+        overflow-x: hidden !important;
+    }
     textarea {
         font-size: 1rem !important;
         min-height: 175px !important
