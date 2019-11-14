@@ -23,8 +23,10 @@ Each of the above 4 activities are deployed as a standalone, stateless applicati
 
 #### Deployment:
 We support two ways for continuous integration and delivery which can automate the task of deployment. A developer can either use Travis CI or Github Workflow.
-New developers do not have to take care of deploying things, they can simply push the code to Github. Below is the flow for smooth deployment:
+New developers do not have to take care of deploying things, they can simply push the code to Github. 
 
+**Deployment through Travis**
+Below is the flow for smooth deployment:
 - Developer pushes the code
 - Travis CI/CD tool gets triggered
 - Travis checkouts latest code from the repository
@@ -33,6 +35,9 @@ New developers do not have to take care of deploying things, they can simply pus
 - Lambda function takes the build from S3 and deploys it
 
  A developer just needs to take care of the environment variables which will be the developer's AWS credentials.
+
+**Deployment through Github Workflow**
+Currently the code is getting deployed through Travis since Github Workflow is still in beta phase. But if you are keen on trying Github workflow then just uncomment the code in /.github/workflows/main.yaml
 
 ![IMAGE ALT TEXT HERE](https://excel-killer-images.s3.amazonaws.com/deploymentPipeline.png)
 
