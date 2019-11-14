@@ -15,10 +15,14 @@ A user can access the activities either through Excel Killer App directly or thr
 ## Developer Guide
 
 **Architecture:**
+Each of the above 4 activities are deployed as a standalone, stateless application on AWS Lambda connected to AWS Dynamo DB.
 
 ![IMAGE ALT TEXT HERE](https://excel-killer-images.s3.amazonaws.com/arch.png)
 
 **Deployment:**
+We support two ways for continuous integration and delivery which can automate the task of deployment. A developer can either use Travis CI or Github Workflow.
+New developers do not have to take care of deploying things, they can simply push the code to Github which will trigger Travis CI/CD tool, it will then in turn
+checkout latest code from the repository. It then builds and packages it and then finally deploys to AWS Lambda function. A developer just needs to take care of the environment variables which will be the developer's AWS credentials.
 
 ![IMAGE ALT TEXT HERE](https://excel-killer-images.s3.amazonaws.com/deploymentPipeline.png)
 
