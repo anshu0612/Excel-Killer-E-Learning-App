@@ -37,7 +37,7 @@ New developers do not have to take care of deploying things, they can simply pus
 ![IMAGE ALT TEXT HERE](https://excel-killer-images.s3.amazonaws.com/deploymentPipeline.png)
 
 ## Contributing
-You want to be involved in the project? Welcome onboard! Suggest features and make you first code contribution. 😃 
+You want to be involved in the project? Welcome onboard! Suggest features and make your first code contribution. 😃 
 
 You can also raise issues [here](https://github.com/anshu0612/Excel-Killer-E-Learning-App/issues)
 
