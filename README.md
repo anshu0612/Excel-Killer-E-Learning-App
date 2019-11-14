@@ -1,4 +1,5 @@
 # Excel Killer - Learning-App [![Build Status](https://travis-ci.com/anshu0612/Excel-Killer-E-Learning-App.svg?branch=master)](https://travis-ci.com/anshu0612/Excel-Killer-E-Learning-App)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ![Excel killer]( https://excel-killer-images.s3.amazonaws.com/ex-logo.png)
 Excel Killer is an open source learning application which strives towards helping users struggling with using MS Excel. It teaches python based Pandas for handling large set of data and Matplotlib for data visualisation. It covers four topics:
@@ -10,6 +11,7 @@ Excel Killer is an open source learning application which strives towards helpin
 ## Accessibility
 
 A user can access the activities either through Excel Killer App directly or through NUS ALSET Achievements platform. 
+
 ![IMAGE ALT TEXT HERE]( https://excel-killer-images.s3.amazonaws.com/arch3.png )
 
 ## Developer Guide
