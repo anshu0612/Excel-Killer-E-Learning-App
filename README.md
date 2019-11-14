@@ -7,21 +7,18 @@ Excel Killer is an open source learning application which strives towards helpin
 - Cleaning the data
 - Data Visualisation
 
- ---
 ## Accessibility
+
 A user can access the activities either through Excel Killer App directly or through NUS ALSET Achievements platform. 
 ![IMAGE ALT TEXT HERE]( https://excel-killer-images.s3.amazonaws.com/arch2.png )
----
+
 ## Developer Guide
 
 **Architecture:**
 
 ![IMAGE ALT TEXT HERE](https://excel-killer-images.s3.amazonaws.com/arch.png)
 
-
-
----
-## Deployment
+**Deployment:**
 
 ![IMAGE ALT TEXT HERE](https://excel-killer-images.s3.amazonaws.com/deploymentPipeline.png)
 
